@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Privacy Policy – BodyFuel Calculator</title>
+<meta name="description" content="Privacy policy for BodyFuel Calculator. We do not collect personal data. All calculations run in your browser."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#080810;--card:#13131f;--border:#252535;--lime:#d4f53c;--text:#eeeef5;--muted:#6b6b8a;--muted2:#9090b0;--fh:'Barlow Condensed',sans-serif;--fb:'Plus Jakarta Sans',sans-serif;--r:14px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased;min-height:100vh;}
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--lime) 0%,#ff6b35 60%,#a78bfa 100%);z-index:100;}
+nav{position:sticky;top:3px;z-index:50;background:rgba(8,8,16,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:52px;}
+.nav-logo{font-family:var(--fh);font-size:20px;font-weight:900;letter-spacing:0.04em;color:var(--text);text-decoration:none;}
+.nav-logo span{color:var(--lime);}
+.nav-links{display:flex;gap:24px;}
+.nav-links a{font-size:13px;font-weight:500;color:var(--muted);text-decoration:none;letter-spacing:0.03em;transition:color 0.2s;}
+.nav-links a:hover{color:var(--text);}
+.wrap{max-width:720px;margin:0 auto;padding:48px 16px 80px;}
+.page-tag{display:inline-flex;align-items:center;gap:7px;background:rgba(212,245,60,0.1);border:1px solid rgba(212,245,60,0.22);color:var(--lime);font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:5px 16px;border-radius:99px;margin-bottom:20px;}
+h1{font-family:var(--fh);font-weight:900;font-size:clamp(30px,6vw,52px);text-transform:uppercase;letter-spacing:-0.01em;margin-bottom:8px;line-height:1;}
+h1 em{font-style:normal;color:var(--lime);}
+.meta{font-size:12px;color:var(--muted);margin-bottom:36px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:26px 24px;margin-bottom:14px;}
+h2{font-family:var(--fh);font-size:18px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:var(--text);margin-bottom:10px;}
+p{font-size:14px;color:var(--muted2);line-height:1.8;margin-bottom:10px;}
+p:last-child{margin-bottom:0;}
+ul{padding-left:20px;margin-bottom:10px;}
+li{font-size:14px;color:var(--muted2);line-height:1.8;margin-bottom:4px;}
+strong{color:var(--text);}
+a{color:var(--lime);text-decoration:none;}
+a:hover{text-decoration:underline;}
+.highlight-box{background:rgba(212,245,60,0.06);border:1px solid rgba(212,245,60,0.2);border-radius:10px;padding:16px 18px;margin-bottom:14px;}
+.highlight-box p{color:var(--muted2);}
+footer{border-top:1px solid var(--border);padding:28px 0 0;margin-top:40px;text-align:center;font-size:12px;color:var(--muted);line-height:2;}
+footer a{color:var(--muted);text-decoration:underline;}
+.nav-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:4px;border-radius:6px;}
+.nav-hamburger span{display:block;height:2px;border-radius:2px;background:var(--muted);transition:all 0.25s;}
+.nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);background:var(--lime);}
+.nav-hamburger.open span:nth-child(2){opacity:0;}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);background:var(--lime);}
+.nav-mobile-menu{display:none;position:fixed;top:55px;left:0;right:0;z-index:49;background:rgba(8,8,16,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px 0;}
+.nav-mobile-menu.open{display:block;}
+.nav-mobile-menu a{display:block;padding:13px 28px;font-size:15px;font-weight:500;color:var(--muted2);text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.04);transition:color 0.18s,background 0.18s;}
+.nav-mobile-menu a:last-child{border-bottom:none;}
+.nav-mobile-menu a:hover{color:var(--lime);background:rgba(212,245,60,0.05);}
+@media(max-width:520px){.nav-links{display:none;}.nav-hamburger{display:flex;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">BODY<span>FUEL</span></a>
+  <div class="nav-links">
+    <a href="index.html#calculator">Calculator</a>
+    <a href="index.html#learn">Learn</a>
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+  </div>
+  <button class="nav-hamburger" id="nav-hbg" aria-label="Menu" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="nav-mob">
+  <a href="index.html#calculator">Calculator</a>
+  <a href="index.html#learn">Learn</a>
+  <a href="about.html">About</a>
+  <a href="privacy.html">Privacy</a>
+</div>
+
+<div class="wrap">
+  <div class="page-tag">Legal</div>
+  <h1><em>Privacy</em> Policy</h1>
+  <div class="meta">Last updated: January 2026 &nbsp;·&nbsp; BodyFuel Calculator</div>
+
+  <div class="highlight-box">
+    <p><strong>The short version:</strong> BodyFuel Calculator does not collect, store, or sell your personal data. All calculations happen entirely in your browser. We never see your age, weight, height, or any other data you enter.</p>
+  </div>
+
+  <div class="card">
+    <h2>1. Information We Do Not Collect</h2>
+    <p>When you use the BodyFuel Calculator, all computation occurs <strong>locally in your web browser</strong> using JavaScript. Your inputs — including age, gender, weight, height, activity level, body fat percentage, and fitness goals — are never transmitted to any server. We cannot see, access, or store this information because it never leaves your device.</p>
+  </div>
+
+  <div class="card">
+    <h2>2. Information Collected Automatically</h2>
+    <p>Like most websites, our hosting provider may automatically record standard web server log data when you visit our site. This may include:</p>
+    <ul>
+      <li>Your browser type and version</li>
+      <li>Your approximate geographic region (country or city level, derived from your IP address)</li>
+      <li>The pages you visit and the time of your visit</li>
+      <li>The referring URL (the page you came from)</li>
+    </ul>
+    <p>This data is collected in aggregate and is used solely for understanding traffic patterns and improving the site. It is not linked to any personally identifiable information.</p>
+  </div>
+
+  <div class="card">
+    <h2>3. Cookies</h2>
+    <p>BodyFuel Calculator itself does not set any cookies. However, third-party services embedded on this site — such as Google AdSense (display advertising) and affiliate link services — may set their own cookies in accordance with their respective privacy policies. These cookies are used to serve relevant advertisements and to track affiliate referrals.</p>
+    <p>You can control or disable cookies through your browser settings at any time. Disabling cookies will not affect the functionality of the calculator.</p>
+  </div>
+
+  <div class="card">
+    <h2>4. Third-Party Advertising</h2>
+    <p>This site may display advertisements served by <strong>Google AdSense</strong> and other advertising networks. These networks use cookies and similar tracking technologies to serve ads based on your prior visits to this website and other websites. Google's use of advertising cookies is governed by <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener">Google's Advertising Policies</a>.</p>
+    <p>You can opt out of personalised advertising by visiting <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener">www.aboutads.info/choices</a> or <a href="https://www.youronlinechoices.com" target="_blank" rel="noopener">www.youronlinechoices.com</a>.</p>
+  </div>
+
+  <div class="card">
+    <h2>5. Affiliate Links</h2>
+    <p>Some links on this website are affiliate links. This means that if you click on a link and subsequently make a purchase or sign up for a service, we may receive a small commission at no extra cost to you. We only link to products and services we believe may be genuinely useful to our users. The presence of an affiliate link does not influence the content, calculations, or information provided on this site.</p>
+  </div>
+
+  <div class="card">
+    <h2>6. Content Locker Verification</h2>
+    <p>To access certain downloadable content (such as the 12-Week Nutrition Plan), users may be asked to complete a short free verification step provided by a third-party CPA (cost-per-action) network. This verification is provided by an external service and is governed by that service's own terms and privacy policy. We do not receive your personal information as part of this process.</p>
+  </div>
+
+  <div class="card">
+    <h2>7. Children's Privacy</h2>
+    <p>BodyFuel Calculator is intended for users aged 15 and older. We do not knowingly collect personal information from children under 13. If you believe a child under 13 has provided personal information through this site, please contact us so we can take appropriate action.</p>
+  </div>
+
+  <div class="card">
+    <h2>8. Changes to This Policy</h2>
+    <p>We may update this Privacy Policy from time to time to reflect changes in our practices or for legal, operational, or regulatory reasons. When we make changes, we will update the "Last updated" date at the top of this page. We encourage you to review this policy periodically.</p>
+  </div>
+
+  <div class="card">
+    <h2>9. Contact</h2>
+    <p>If you have questions or concerns about this Privacy Policy, please visit our <a href="about.html">About page</a> for contact information.</p>
+  </div>
+
+  <footer>
+    <p>© 2026 BodyFuel Calculator &nbsp;·&nbsp; <a href="index.html">Home</a> &nbsp;·&nbsp; <a href="about.html">About</a> &nbsp;·&nbsp; <a href="privacy.html">Privacy Policy</a></p>
+    <p>Results are estimates for informational purposes only.</p>
+  </footer>
+</div>
+<script>function toggleMenu(){document.getElementById('nav-hbg').classList.toggle('open');document.getElementById('nav-mob').classList.toggle('open');}</script>
+</body>
+</html>

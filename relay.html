@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BodyFuel – Preparing your results…</title>
+<style>
+  body{background:#080810;color:#eeeef5;font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;flex-direction:column;gap:16px;}
+  .spinner{width:36px;height:36px;border:3px solid #252535;border-top-color:#d4f53c;border-radius:50%;animation:spin 0.7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  p{font-size:14px;color:#6b6b8a;}
+</style>
+</head>
+<body>
+<div class="spinner"></div>
+<p>Preparing your personal results…</p>
+<script>
+// relay.html opens as a NEW TAB (top-level, not in iframe).
+// It can freely write localStorage on this origin.
+// After saving, it redirects THIS tab to the CPA locker.
+// CPAGrip redirect URL must be set to thankyou.html (not relay.html).
+
+(function(){
+  var urlParams = new URLSearchParams(window.location.search);
+
+  var keys = [
+    ['cal','bf_cal'],['bmi','bf_bmi'],['bmi_label','bf_bmi_label'],
+    ['bmr','bf_bmr'],['tdee','bf_tdee'],['prot','bf_prot'],
+    ['carb','bf_carb'],['fat','bf_fat'],['water','bf_water'],
+    ['goal','bf_goal'],['weight','bf_weight'],['unit','bf_unit'],['iw','bf_iw']
+  ];
+
+  try{
+    keys.forEach(function(k){
+      var val = urlParams.get(k[0]);
+      if(val !== null) localStorage.setItem(k[1], val);
+    });
+  }catch(e){ console.warn('localStorage write failed:', e); }
+
+  // Navigate THIS tab directly to thankyou.html.
+  window.location.replace('https://vantix-insights.github.io/bodyfuel-calculator-sites1/thankyou.html');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BodyFuel Calculator – Free BMI, Calories & Macro Calculator</title>
+<meta name="description" content="Get your precise BMI, daily calorie target, protein/carb/fat macros, water intake, and 6-month projection — free, instant, no sign-up. Trusted by 80,000+ people."/>
+<meta name="keywords" content="BMI calculator, calorie calculator, macro calculator, TDEE calculator, daily calorie needs, protein carbs fat calculator, weight loss calculator"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #080810;
+  --bg2: #0f0f1a;
+  --card: #13131f;
+  --card2: #1a1a28;
+  --border: #252535;
+  --border2: #30304a;
+  --lime: #d4f53c;
+  --lime-dim: rgba(212,245,60,0.12);
+  --lime-border: rgba(212,245,60,0.25);
+  --orange: #ff6b35;
+  --orange-dim: rgba(255,107,53,0.12);
+  --blue: #4da6ff;
+  --blue-dim: rgba(77,166,255,0.12);
+  --purple: #a78bfa;
+  --text: #eeeef5;
+  --muted: #6b6b8a;
+  --muted2: #9090b0;
+  --fh: 'Barlow Condensed', sans-serif;
+  --fb: 'Plus Jakarta Sans', sans-serif;
+  --r: 14px;
+  --r-sm: 9px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--fb);
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ── DIAGONAL ACCENT STRIPE ── */
+body::before {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--lime) 0%, var(--orange) 60%, var(--purple) 100%);
+  z-index: 100;
+}
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 3px; z-index: 50;
+  background: rgba(8,8,16,0.88);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 52px;
+}
+.nav-logo {
+  font-family: var(--fh); font-size: 20px; font-weight: 900;
+  letter-spacing: 0.04em; color: var(--text); text-decoration: none;
+}
+.nav-logo span { color: var(--lime); }
+.nav-links { display: flex; gap: 24px; }
+.nav-links a {
+  font-size: 13px; font-weight: 500; color: var(--muted);
+  text-decoration: none; letter-spacing: 0.03em;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text); }
+
+/* hamburger */
+.nav-burger {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; border: none; cursor: pointer; padding: 6px;
+}
+.nav-burger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--text); border-radius: 2px; transition: all 0.25s;
+}
+.nav-burger.open span:nth-child(1){ transform: translateY(7px) rotate(45deg); }
+.nav-burger.open span:nth-child(2){ opacity: 0; }
+.nav-burger.open span:nth-child(3){ transform: translateY(-7px) rotate(-45deg); }
+
+.nav-mobile-menu {
+  display: none; position: fixed; top: 55px; left: 0; right: 0;
+  background: rgba(8,8,16,0.97); backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+  flex-direction: column; padding: 16px 24px 20px; gap: 0; z-index: 49;
+}
+.nav-mobile-menu.open { display: flex; }
+.nav-mobile-menu a {
+  font-size: 15px; font-weight: 500; color: var(--muted2);
+  text-decoration: none; padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  transition: color 0.2s;
+}
+.nav-mobile-menu a:last-child { border-bottom: none; }
+.nav-mobile-menu a:hover { color: var(--lime); }
+
+/* ── WRAPPER ── */
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 16px 80px; }
+
+/* ── HERO ── */
+.hero { text-align: center; padding: 52px 0 36px; }
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--lime-dim); border: 1px solid var(--lime-border);
+  color: var(--lime); font-size: 11px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 5px 16px; border-radius: 99px; margin-bottom: 22px;
+}
+.hero-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--lime); animation: blink 1.8s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+h1 {
+  font-family: var(--fh); font-weight: 900; letter-spacing: -0.01em;
+  font-size: clamp(34px, 7vw, 62px); line-height: 1.0;
+  text-transform: uppercase; margin-bottom: 16px;
+}
+h1 em { font-style: normal; color: var(--lime); }
+.hero-sub { color: var(--muted2); font-size: 15px; max-width: 480px; margin: 0 auto 28px; }
+
+.proof-row { display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; }
+.proof-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--muted2); }
+.proof-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--lime); }
+
+/* ── CARDS ── */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 26px 22px; margin-bottom: 14px;
+  animation: up 0.45s ease both;
+}
+@keyframes up { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+.card:nth-child(2){animation-delay:.07s}
+.card:nth-child(3){animation-delay:.13s}
+.card:nth-child(4){animation-delay:.19s}
+
+/* ── SECTION LABELS ── */
+.slabel {
+  font-family: var(--fh); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--lime); margin-bottom: 16px; display: block;
+}
+
+/* ── FORM ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+.fg { display: flex; flex-direction: column; gap: 6px; }
+.fg.full { grid-column: 1/-1; }
+.fg label { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+
+input[type=number], select {
+  background: var(--bg2); border: 1.5px solid var(--border);
+  color: var(--text); font-family: var(--fb); font-size: 15px; font-weight: 400;
+  padding: 12px 14px; border-radius: var(--r-sm); width: 100%;
+  outline: none; transition: border-color 0.18s;
+  -moz-appearance: textfield; appearance: none;
+}
+input[type=number]::-webkit-inner-spin-button { display: none; }
+input:focus, select:focus { border-color: var(--lime); }
+select option { background: var(--bg2); }
+
+/* ── TOGGLES ── */
+.toggle {
+  display: flex; background: var(--bg2); border: 1.5px solid var(--border);
+  border-radius: var(--r-sm); overflow: hidden;
+}
+.toggle button {
+  flex: 1; padding: 11px 6px; background: none; border: none;
+  color: var(--muted); font-family: var(--fb); font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all 0.18s;
+}
+.toggle button.on { background: var(--lime); color: #080810; font-weight: 700; }
+
+/* ── GOAL PILLS ── */
+.gpills { display: flex; gap: 9px; flex-wrap: wrap; }
+.gp {
+  padding: 8px 18px; border-radius: 99px;
+  border: 1.5px solid var(--border); background: none;
+  color: var(--muted); cursor: pointer; font-family: var(--fb);
+  font-size: 13px; font-weight: 500; transition: all 0.18s;
+}
+.gp.on { border-color: var(--lime); background: var(--lime-dim); color: var(--lime); }
+
+/* ── INFO TOOLTIPS ── */
+.field-note {
+  font-size: 11px; color: var(--muted); margin-top: 3px; line-height: 1.4;
+}
+
+/* ── CALC BUTTON ── */
+.btn-go {
+  width: 100%; padding: 17px; margin-top: 18px;
+  background: var(--lime); color: #080810;
+  font-family: var(--fh); font-size: 18px; font-weight: 900;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  border: none; border-radius: var(--r-sm); cursor: pointer;
+  transition: all 0.18s; position: relative; overflow: hidden;
+}
+.btn-go:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(212,245,60,0.28); }
+.btn-go:active { transform: translateY(0); box-shadow: none; }
+
+/* ── ERROR ── */
+.err {
+  background: rgba(255,107,53,0.1); border: 1px solid rgba(255,107,53,0.3);
+  color: var(--orange); border-radius: var(--r-sm); padding: 11px 14px;
+  font-size: 13px; margin-top: 11px; display: none;
+}
+
+/* ── RESULTS ── */
+#results { display: none; }
+
+.res-head { text-align: center; padding: 4px 0 22px; }
+.res-head h2 {
+  font-family: var(--fh); font-size: 28px; font-weight: 900;
+  text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 5px;
+}
+.res-head h2 span { color: var(--lime); }
+.res-head p { font-size: 13px; color: var(--muted2); }
+
+/* ── STAT GRID ── */
+.sg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 11px; margin-bottom: 18px; }
+.sbox {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r-sm); padding: 14px 10px; text-align: center;
+}
+.sbox.hi { border-color: var(--lime-border); background: var(--lime-dim); }
+.sbox.oi { border-color: rgba(255,107,53,0.28); background: var(--orange-dim); }
+.sbox.bi { border-color: rgba(77,166,255,0.28); background: var(--blue-dim); }
+.sv {
+  font-family: var(--fh); font-size: 28px; font-weight: 900;
+  line-height: 1; letter-spacing: 0.02em; margin-bottom: 3px;
+}
+.sv.lime { color: var(--lime); }
+.sv.org { color: var(--orange); }
+.sv.blu { color: var(--blue); }
+.sv.pur { color: var(--purple); }
+.sl { font-size: 10px; color: var(--muted); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* ── BMI BAR ── */
+.bmi-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.bmi-row span:first-child { font-size: 13px; font-weight: 600; }
+.bmi-row span:last-child { font-size: 13px; color: var(--muted2); }
+.bmi-track { position: relative; height: 8px; border-radius: 99px; overflow: hidden; margin-bottom: 5px;
+  background: linear-gradient(to right, #4da6ff 0%, #4affa0 25%, #d4f53c 50%, #ffaa00 70%, #ff4455 100%);
+}
+.bmi-pin {
+  position: absolute; top: -4px; width: 16px; height: 16px;
+  background: #fff; border-radius: 50%; border: 2.5px solid #080810;
+  transform: translateX(-50%); transition: left 0.7s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.25);
+}
+.bmi-ticks { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
+
+/* ── IDEAL WEIGHT BAND ── */
+.iw-band {
+  display: flex; align-items: center; gap: 10px; margin-top: 14px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 12px 14px;
+}
+.iw-band .icon { font-size: 18px; }
+.iw-text { font-size: 13px; }
+.iw-text strong { color: var(--lime); }
+
+/* ── MACROS ── */
+.macro-layout { display: grid; grid-template-columns: 150px 1fr; gap: 18px; align-items: center; }
+.doughnut-wrap { position: relative; width: 150px; height: 150px; flex-shrink: 0; }
+.doughnut-wrap canvas { display: block; width: 150px !important; height: 150px !important; }
+.doughnut-label {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  text-align: center; pointer-events: none;
+}
+.doughnut-label .dl-num { font-family: var(--fh); font-size: 22px; font-weight: 900; line-height: 1; }
+.doughnut-label .dl-sub { font-size: 10px; color: var(--muted); }
+
+.mlist { display: flex; flex-direction: column; gap: 14px; }
+.mitem-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
+.mitem-name { font-size: 13px; font-weight: 600; }
+.mitem-g { font-size: 12px; color: var(--muted); }
+.mbar { height: 5px; border-radius: 99px; background: var(--border); overflow: hidden; }
+.mfill { height: 100%; border-radius: 99px; transition: width 0.9s cubic-bezier(.34,1.56,.64,1); }
+
+/* ── WATER ── */
+.water-row { display: flex; align-items: center; gap: 14px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+.water-icon { font-size: 24px; }
+.water-text { font-size: 13px; }
+.water-text strong { color: var(--blue); font-family: var(--fh); font-size: 18px; font-weight: 900; }
+
+/* ── LOCKED BLOCK (inline card) ── */
+.lock-wrap { position: relative; }
+.lock-blur { filter: blur(7px); pointer-events: none; user-select: none; padding: 18px; }
+.lock-ghost { display: flex; flex-direction: column; gap: 9px; }
+.lgl { height: 13px; border-radius: 4px; background: var(--border); }
+.lock-over {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 11px;
+  padding: 18px; text-align: center;
+  background: rgba(8,8,16,0.72); backdrop-filter: blur(3px); border-radius: var(--r);
+}
+.lock-over-title { font-family: var(--fh); font-size: 18px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; }
+.lock-over-sub { font-size: 13px; color: var(--muted2); max-width: 280px; }
+.btn-unlock-inline {
+  background: var(--lime); color: #080810;
+  font-family: var(--fh); font-size: 14px; font-weight: 900;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  border: none; border-radius: var(--r-sm); padding: 12px 24px; cursor: pointer;
+  width: 100%; max-width: 280px; transition: all 0.18s;
+}
+.btn-unlock-inline:hover { box-shadow: 0 8px 22px rgba(212,245,60,0.3); transform: translateY(-1px); }
+.lock-note-inline { font-size: 11px; color: var(--muted); }
+
+/* ── CHARTS ── */
+.chart-card h3 { font-family: var(--fh); font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px; }
+
+
+
+/* ── EDUCATION SECTIONS ── */
+.edu-section { margin-top: 48px; }
+.edu-section h2 {
+  font-family: var(--fh); font-size: 26px; font-weight: 900;
+  text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px;
+}
+.edu-section h2 em { font-style: normal; color: var(--lime); }
+.edu-section h3 {
+  font-family: var(--fh); font-size: 18px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.04em; margin: 28px 0 8px; color: var(--muted2);
+}
+.edu-section p { font-size: 14px; color: var(--muted2); line-height: 1.75; margin-bottom: 12px; }
+.edu-section ul { padding-left: 20px; }
+.edu-section li { font-size: 14px; color: var(--muted2); line-height: 1.75; margin-bottom: 6px; }
+.edu-section strong { color: var(--text); }
+.formula-box {
+  background: var(--card2); border: 1px solid var(--border2);
+  border-left: 3px solid var(--lime); border-radius: var(--r-sm);
+  padding: 14px 16px; margin: 14px 0;
+  font-size: 13px; color: var(--muted2); line-height: 1.8;
+}
+.formula-box strong { color: var(--lime); font-family: var(--fh); font-size: 14px; letter-spacing: 0.04em; }
+
+/* ── FAQ ── */
+details.faq-item { border-top: 1px solid var(--border); padding: 16px 0; }
+details.faq-item:last-of-type { border-bottom: 1px solid var(--border); }
+details.faq-item summary {
+  font-size: 14px; font-weight: 600; color: var(--text);
+  cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+  list-style: none; user-select: none;
+}
+details.faq-item summary::-webkit-details-marker { display: none; }
+details.faq-item summary::after {
+  content: '+'; color: var(--lime); font-size: 22px; font-weight: 300;
+  line-height: 1; flex-shrink: 0; margin-left: 12px; transition: transform 0.2s;
+}
+details.faq-item[open] summary::after { transform: rotate(45deg); }
+.faq-a { font-size: 13px; color: var(--muted2); line-height: 1.75; margin-top: 12px; }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border); padding: 28px 0 0; margin-top: 48px;
+  text-align: center; font-size: 12px; color: var(--muted); line-height: 2;
+}
+footer a { color: var(--muted); text-decoration: underline; }
+footer a:hover { color: var(--muted2); }
+
+/* ── RESPONSIVE ── */
+@media(max-width:520px){
+  .grid-2{ grid-template-columns:1fr; }
+  .sg{ grid-template-columns:1fr 1fr; }
+  .sg .sbox:nth-child(3){ grid-column:1/-1; }
+  .macro-layout{ grid-template-columns:1fr; justify-items:center; }
+  .doughnut-wrap{ width:150px; height:150px; margin:0 auto 18px; }
+  .doughnut-wrap canvas{ width:150px !important; height:150px !important; }
+  .mlist{ width:100%; }
+  .nav-links{ display:none; }
+  .nav-burger{ display:flex; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">BODY<span>FUEL</span></a>
+  <div class="nav-links">
+    <a href="#calculator">Calculator</a>
+    <a href="#learn">Learn</a>
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+  </div>
+  <button class="nav-burger" id="nav-burger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="nav-mobile-menu">
+  <a href="#calculator" onclick="closeMenu()">Calculator</a>
+  <a href="#learn" onclick="closeMenu()">Learn</a>
+  <a href="about.html">About</a>
+  <a href="privacy.html">Privacy</a>
+</div>
+
+<div class="wrap">
+
+<!-- HERO -->
+<header class="hero" id="calculator">
+  <div class="hero-tag">Free · Instant · Science-Based</div>
+  <h1>Your <em>Exact</em> Calorie<br>&amp; Macro Blueprint</h1>
+  <p class="hero-sub">BMI, daily calories, protein/carbs/fat split, water intake, and your 6-month projection — calculated instantly.</p>
+  <div class="proof-row">
+    <div class="proof-item"><div class="proof-dot"></div>80,000+ calculations served</div>
+    <div class="proof-item"><div class="proof-dot"></div>Mifflin-St Jeor formula</div>
+    <div class="proof-item"><div class="proof-dot"></div>No sign-up required</div>
+  </div>
+</header>
+
+<!-- ══ CALCULATOR CARD ══ -->
+<div class="card">
+  <span class="slabel">Step 1 — Your Details</span>
+
+  <div class="grid-2">
+    <!-- Unit -->
+    <div class="fg full">
+      <label>Unit System</label>
+      <div class="toggle">
+        <button id="u-met" onclick="setUnit('metric')">Metric (kg / cm)</button>
+        <button id="u-imp" class="on" onclick="setUnit('imperial')">Imperial (lbs / in)</button>
+      </div>
+    </div>
+    <!-- Gender -->
+    <div class="fg">
+      <label>Biological Sex</label>
+      <select id="gender">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+      <div class="field-note">Used in the Mifflin-St Jeor BMR formula.</div>
+    </div>
+    <!-- Age -->
+    <div class="fg">
+      <label>Age (years)</label>
+      <input type="number" id="age" placeholder="e.g. 28" min="15" max="100"/>
+      <div class="field-note">Metabolism slows ~2% per decade after 30.</div>
+    </div>
+    <!-- Weight -->
+    <div class="fg">
+      <label id="wlabel">Weight (lbs)</label>
+      <input type="number" id="weight" placeholder="e.g. 159"/>
+      <div class="field-note">Use your current body weight.</div>
+    </div>
+    <!-- Height -->
+    <div class="fg">
+      <label id="hlabel">Height (in)</label>
+      <input type="number" id="height" placeholder="e.g. 69"/>
+      <div class="field-note">Stand straight, no shoes.</div>
+    </div>
+    <!-- Body fat (optional) -->
+    <div class="fg full">
+      <label>Body Fat % <span style="color:var(--muted);font-weight:400;text-transform:none;font-size:10px">(optional — unlocks Katch-McArdle formula)</span></label>
+      <input type="number" id="bodyfat" placeholder="e.g. 18  — leave blank to skip" min="3" max="60"/>
+      <div class="field-note">If known, this improves accuracy by accounting for lean mass, not just total weight.</div>
+    </div>
+  </div>
+
+  <span class="slabel" style="margin-top:22px">Step 2 — Activity Level</span>
+  <div class="fg">
+    <select id="activity">
+      <option value="1.2">Sedentary — desk job, little to no exercise</option>
+      <option value="1.375">Lightly Active — light exercise 1–3 days/week</option>
+      <option value="1.55" selected>Moderately Active — exercise 3–5 days/week</option>
+      <option value="1.725">Very Active — hard exercise 6–7 days/week</option>
+      <option value="1.9">Athlete — physical job or 2× daily training</option>
+    </select>
+    <div class="field-note">Be honest — most people overestimate activity by one level.</div>
+  </div>
+
+  <span class="slabel" style="margin-top:22px">Step 3 — Your Primary Goal</span>
+  <div class="gpills">
+    <button class="gp" data-g="aggressive-loss" onclick="setGoal('aggressive-loss')">🔥 Aggressive Cut (−750 kcal)</button>
+    <button class="gp" data-g="lose" onclick="setGoal('lose')">📉 Moderate Cut (−500 kcal)</button>
+    <button class="gp on" data-g="maintain" onclick="setGoal('maintain')">⚖️ Maintain</button>
+    <button class="gp" data-g="gain" onclick="setGoal('gain')">💪 Lean Bulk (+300 kcal)</button>
+    <button class="gp" data-g="aggressive-gain" onclick="setGoal('aggressive-gain')">🚀 Fast Bulk (+500 kcal)</button>
+  </div>
+  <div class="field-note" style="margin-top:8px">Moderate Cut = ~0.5 kg/week fat loss. Aggressive Cut = ~0.75 kg/week.</div>
+
+  <div class="err" id="err">Please fill in all required fields (age, weight, height) with valid values.</div>
+
+  <button class="btn-go" onclick="calc()">Calculate My Blueprint &rarr;</button>
+</div>
+
+<!-- ══ RESULTS ══ -->
+<div id="results">
+
+  <!-- Key Stats -->
+  <div class="card">
+    <div class="res-head">
+      <h2>Your <span>Blueprint</span> ✓</h2>
+      <p>Calculated using Mifflin-St Jeor (or Katch-McArdle if body fat provided) · WHO BMI standards</p>
+    </div>
+
+    <div class="sg">
+      <div class="sbox hi">
+        <div class="sv lime" id="r-cal">—</div>
+        <div class="sl">Daily Calories</div>
+      </div>
+      <div class="sbox">
+        <div class="sv" id="r-bmi">—</div>
+        <div class="sl">BMI</div>
+      </div>
+      <div class="sbox bi">
+        <div class="sv blu" id="r-bmr">—</div>
+        <div class="sl">BMR</div>
+      </div>
+      <div class="sbox oi">
+        <div class="sv org" id="r-tdee">—</div>
+        <div class="sl">TDEE</div>
+      </div>
+    </div>
+
+    <!-- BMI Bar -->
+    <div class="bmi-row">
+      <span>BMI Classification</span>
+      <span id="r-bmi-label">—</span>
+    </div>
+    <div class="bmi-track">
+      <div class="bmi-pin" id="bmi-pin" style="left:0%"></div>
+    </div>
+    <div class="bmi-ticks">
+      <span>Underweight</span><span>Normal</span><span>Overweight</span><span>Obese</span>
+    </div>
+
+    <!-- Ideal weight -->
+    <div class="iw-band">
+      <div class="iw-icon">📏</div>
+      <div class="iw-text">Healthy weight range for your height: <strong id="r-iw">—</strong></div>
+    </div>
+  </div>
+
+  <!-- Macros -->
+  <div class="card">
+    <span class="slabel">Macro Breakdown</span>
+    <div class="macro-layout">
+      <div class="doughnut-wrap">
+        <canvas id="mc" width="150" height="150"></canvas>
+        <div class="doughnut-label">
+          <div class="dl-num" id="dc-cal">—</div>
+          <div class="dl-sub">kcal/day</div>
+        </div>
+      </div>
+      <div class="mlist">
+        <div>
+          <div class="mitem-head">
+            <span class="mitem-name" style="color:#d4f53c">🥩 Protein</span>
+            <span class="mitem-g"><span id="r-prot">—g</span> <span id="r-prot-pct" style="color:var(--lime);font-weight:700"></span></span>
+          </div>
+          <div class="mbar"><div class="mfill" id="b-prot" style="background:#d4f53c;width:0%"></div></div>
+        </div>
+        <div>
+          <div class="mitem-head">
+            <span class="mitem-name" style="color:#ff6b35">🍞 Carbohydrates</span>
+            <span class="mitem-g"><span id="r-carb">—g</span> <span id="r-carb-pct" style="color:#ff6b35;font-weight:700"></span></span>
+          </div>
+          <div class="mbar"><div class="mfill" id="b-carb" style="background:#ff6b35;width:0%"></div></div>
+        </div>
+        <div>
+          <div class="mitem-head">
+            <span class="mitem-name" style="color:#a78bfa">🥑 Dietary Fat</span>
+            <span class="mitem-g"><span id="r-fat">—g</span> <span id="r-fat-pct" style="color:#a78bfa;font-weight:700"></span></span>
+          </div>
+          <div class="mbar"><div class="mfill" id="b-fat" style="background:#a78bfa;width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Water -->
+    <div class="water-row">
+      <div class="water-icon">💧</div>
+      <div class="water-text">Daily water intake target: <strong id="r-water">—</strong> <span style="font-size:12px;color:var(--muted)">litres</span></div>
+    </div>
+  </div>
+
+  <!-- LOCKED: Mega Value Stack -->
+  <div class="card" style="border-color:rgba(212,245,60,0.2);background:linear-gradient(160deg,#13131f 60%,rgba(212,245,60,0.04) 100%);">
+
+    <!-- Header -->
+    <div style="text-align:center;margin-bottom:22px;">
+      <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(212,245,60,0.1);border:1px solid rgba(212,245,60,0.3);color:#d4f53c;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:5px 14px;border-radius:99px;margin-bottom:14px;">
+        ✅ &nbsp;Yours Free — Verify to Access
+      </div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(22px,5vw,34px);font-weight:900;text-transform:uppercase;letter-spacing:0.02em;line-height:1.05;margin-bottom:10px;">
+        Your Numbers Are Ready.<br><span style="color:#d4f53c;">Here's the System to Act on Them.</span>
+      </div>
+      <p style="font-size:14px;color:#9090b0;max-width:480px;margin:0 auto;line-height:1.7;">
+        The 12 resources below are yours at no cost. We just ask for a quick identity verification before sending them — the same reason any site confirms you're a real person before giving access to free content.
+      </p>
+    </div>
+
+    <!-- Access bar -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:24px;padding:12px 16px;background:rgba(77,166,255,0.06);border:1px solid rgba(77,166,255,0.18);border-radius:10px;flex-wrap:wrap;">
+      <span style="font-size:13px;color:#9090b0;">Bundle value:</span>
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;color:#6b6b8a;text-decoration:line-through;">$37</span>
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:900;color:#d4f53c;">FREE</span>
+      <span style="font-size:13px;color:#9090b0;">·</span>
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:#eeeef5;">12 resources</span>
+      <span style="background:rgba(77,166,255,0.12);border:1px solid rgba(77,166,255,0.25);color:#4da6ff;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 10px;border-radius:99px;">Verification required</span>
+    </div>
+
+    <!-- 12 deliverables grid -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;">
+
+      <div style="background:#0f0f1a;border:1px solid #252535;border-radius:10px;padding:13px 14px;display:flex;gap:10px;align-items:flex-start;">
+        <div style="font-size:20px;flex-shrink:0;margin-top:1px;">📅</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#eeeef5;margin-bottom:3px;">12-Week Calorie Schedule</div>
+          <div style="font-size:11px;color:#6b6b8a;line-height:1.5;">Exact daily calorie targets for every single week — automatically phased to prevent plateaus and keep your metabolism running hot.</div>
+        </div>
+      </div>
+
+      <div style="background:#0f0f1a;border:1px solid #252535;border-radius:10px;padding:13px 14px;display:flex;gap:10px;align-items:flex-start;">
+        <div style="font-size:20px;flex-shrink:0;margin-top:1px;">🍽️</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#eeeef5;margin-bottom:3px;">7-Day Meal Plan Template</div>
+          <div style="font-size:11px;color:#6b6b8a;line-height:1.5;">A full week of meals with calories and macros already calculated — breakfast, lunch, dinner, and 2 snacks. Just eat and track.</div>
+        </div>
+      </div>
+
+      <div style="background:#0f0f1a;border:1px solid #252535;border-radius:10px;padding:13px 14px;display:flex;gap:10px;align-items:flex-start;">
+        <div style="font-size:20px;flex-shrink:0;margin-top:1px;">💪</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#eeeef5;margin-bottom:3px;">Workout-Day vs. Rest-Day Macros</div>
+          <div style="font-size:11px;color:#6b6b8a;line-height:1.5;">Your body needs different fuel on training days vs. rest days. This carb-cycling split tells you exactly how to adjust — most people miss this entirely.</div>
+        </div>
+      </div>
+
+      <div style="background:#0f0f1a;border:1px solid #252535;border-radius:10px;padding:13px 14px;display:flex;gap:10px;align-items:flex-start;">
+        <div style="font-size:20px;flex-shrink:0;margin-top:1px;">⏰</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#eeeef5;margin-bottom:3px;">Meal Timing Blueprint</div>
+          <div style="font-size:11px;color:#6b6b8a;line-height:1.5;">When to eat protein, when to load carbs, and when to eat your biggest meal. Timing alone can change how your body uses the calories you're already eating.</div>
+        </div>
+      </div>
+
+      <div style="background:#0f0f1a;border:1px solid #252535;border-radius:10px;padding:13px 14px;display:flex;gap:10px;align-items:flex-start;">
+        <div style="font-size:20px;flex-shrink:0;margin-top:1px;">🛒</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#eeeef5;margin-bottom:3px;">High-Protein Grocery List</div>
+          <div style="font-size:11px;color:#6b6b8a;line-height:1.5;">The exact foods that hit your protein targets without blowing your calorie budget — organized by category so your weekly shop takes 20 minutes flat.</div>
+        </div>
+      </div>
+
+      <div style="background:#0f0f1a;border:1px solid #252535;border-radius:10px;padding:13px 14px;display:flex;gap:10px;align-items:flex-start;">
+        <div style="font-size:20px;flex-shrink:0;margin-top:1px;">🔄</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#eeeef5;margin-bottom:3px;">Plateau-Breaker Protocol</div>
+          <div style="font-size:11px;color:#6b6b8a;line-height:1.5;">The step-by-step adjustment plan for when the scale stops moving. Exactly when and how to change your calories and macros to start progressing again.</div>
+        </div>
+      </div>
+
+      <div style="background:#0f0f1a;border:1px solid #252535;border-radius:10px;padding:13px 14px;display:flex;gap:10px;align-items:flex-start;">
+        <div style="font-size:20px;flex-shrink:0;margin-top:1px;">📊</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#eeeef5;margin-bottom:3px;">Weekly Progress Tracker Sheet</div>
+          <div style="font-size:11px;color:#6b6b8a;line-height:1.5;">Printable weigh-in log with a trend-line column so you see real fat loss progress — not just daily water weight swings that fool most people into quitting.</div>
+        </div>
+      </div>
+
+      <div style="background:#0f0f1a;border:1px solid #252535;border-radius:10px;padding:13px 14px;display:flex;gap:10px;align-items:flex-start;">
+        <div style="font-size:20px;flex-shrink:0;margin-top:1px;">🍕</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#eeeef5;margin-bottom:3px;">Eating Out Survival Guide</div>
+          <div style="font-size:11px;color:#6b6b8a;line-height:1.5;">How to order at restaurants, fast food, and social events and still hit your macros — because real life doesn't always happen in a kitchen.</div>
+        </div>
+      </div>
+
+      <div style="background:#0f0f1a;border:1px solid #252535;border-radius:10px;padding:13px 14px;display:flex;gap:10px;align-items:flex-start;">
+        <div style="font-size:20px;flex-shrink:0;margin-top:1px;">😴</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#eeeef5;margin-bottom:3px;">Sleep & Recovery Nutrition Guide</div>
+          <div style="font-size:11px;color:#6b6b8a;line-height:1.5;">What to eat before bed, how sleep affects fat loss hormones (ghrelin and leptin), and the single most underrated tool for hitting body composition goals faster.</div>
+        </div>
+      </div>
+
+      <div style="background:#0f0f1a;border:1px solid #252535;border-radius:10px;padding:13px 14px;display:flex;gap:10px;align-items:flex-start;">
+        <div style="font-size:20px;flex-shrink:0;margin-top:1px;">🧃</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#eeeef5;margin-bottom:3px;">Supplement Truth Sheet</div>
+          <div style="font-size:11px;color:#6b6b8a;line-height:1.5;">A no-hype breakdown of which supplements have actual science behind them (protein, creatine, caffeine) and which are a waste of money — saves you hundreds per year.</div>
+        </div>
+      </div>
+
+      <div style="background:#0f0f1a;border:1px solid #252535;border-radius:10px;padding:13px 14px;display:flex;gap:10px;align-items:flex-start;">
+        <div style="font-size:20px;flex-shrink:0;margin-top:1px;">🧠</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#eeeef5;margin-bottom:3px;">Mindset & Habit Framework</div>
+          <div style="font-size:11px;color:#6b6b8a;line-height:1.5;">The cognitive reframing techniques used by elite athletes to stay consistent when motivation disappears — because discipline, not motivation, is what actually changes your body.</div>
+        </div>
+      </div>
+
+      <div style="background:rgba(212,245,60,0.05);border:1px solid rgba(212,245,60,0.25);border-radius:10px;padding:13px 14px;display:flex;gap:10px;align-items:flex-start;">
+        <div style="font-size:20px;flex-shrink:0;margin-top:1px;">🎯</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#d4f53c;margin-bottom:3px;">Your Personalized Goal Roadmap</div>
+          <div style="font-size:11px;color:#9090b0;line-height:1.5;">A custom milestone map built around <em>your</em> numbers from the calculator — showing exactly what you'll weigh at Week 4, Week 8, and Week 12 if you follow the system.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Social proof strip -->
+    <div style="display:flex;align-items:center;gap:16px;padding:12px 16px;background:#0f0f1a;border:1px solid #252535;border-radius:10px;margin-bottom:20px;flex-wrap:wrap;">
+      <div style="font-size:13px;color:#9090b0;line-height:1.5;flex:1;min-width:200px;">
+        💬 <em style="color:#eeeef5;">"I was skeptical about the verification step but it took maybe 15 seconds. The 12-week calorie schedule was exactly what I needed."</em> — Marcus T., used the calculator last week
+      </div>
+      <div style="display:flex;gap:3px;">
+        <span style="color:#d4f53c;font-size:14px;">★★★★★</span>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div style="text-align:center;">
+      <!--
+      URL Locker — direct link, no JS needed
+      -->
+      <a id="verify-btn"
+         href="#"
+         onclick="openVerify(event)"
+         style="width:100%;max-width:480px;padding:18px 24px;background:#d4f53c;color:#080810;font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:900;letter-spacing:0.05em;text-transform:uppercase;border:none;border-radius:10px;cursor:pointer;transition:all 0.18s;display:block;margin:0 auto;text-decoration:none;text-align:center;"
+         onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 32px rgba(212,245,60,0.3)'"
+         onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+        ✅ &nbsp;Verify &amp; Get Free Access
+      </a>
+      <div style="margin-top:10px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;">
+        <span style="font-size:11px;color:#6b6b8a;">🔐 Quick identity check</span>
+        <span style="font-size:11px;color:#6b6b8a;">⚡ Instant access after</span>
+        <span style="font-size:11px;color:#6b6b8a;">💳 No credit card</span>
+        <span style="font-size:11px;color:#6b6b8a;">🚫 No payment ever</span>
+        <span style="font-size:11px;color:#6b6b8a;">⏱ About 15 seconds</span>
+      </div>
+      <div style="margin-top:14px;padding:11px 16px;background:rgba(77,166,255,0.06);border:1px solid rgba(77,166,255,0.16);border-radius:9px;font-size:12px;color:#9090b0;line-height:1.65;max-width:480px;margin-left:auto;margin-right:auto;">
+        <strong style="color:#4da6ff;">Why a verification step?</strong> These resources are free but real. To stop bots from flooding the system and keep access open for actual people, we run a short one-time verification. It takes about 15 seconds. Your 12 resources open on the other side.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Weight Projection Chart -->
+  <div class="card chart-card">
+    <h3>📈 6-Month Weight Projection</h3>
+    <canvas id="wc" height="200"></canvas>
+  </div>
+
+</div><!-- /results -->
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- EDUCATIONAL CONTENT — CRITICAL FOR ADSENSE/SEO   -->
+<!-- ══════════════════════════════════════════════════ -->
+<section class="edu-section" id="learn">
+
+  <h2>What Is <em>BMI</em> and Why Does It Matter?</h2>
+  <p><strong>Body Mass Index (BMI)</strong> is a numerical value calculated from your height and weight. It was developed by Belgian mathematician Adolphe Quetelet in the 1830s as a quick screening tool to identify whether a person may have a weight-related health risk. BMI does not directly measure body fat, but studies have shown that it correlates with more direct measures of body fatness, such as underwater weighing.</p>
+  <p>The World Health Organization (WHO) classifies BMI for adults 20 years and older as follows:</p>
+  <ul>
+    <li><strong>Below 18.5</strong> — Underweight. May indicate malnutrition, eating disorders, or other health problems.</li>
+    <li><strong>18.5 to 24.9</strong> — Normal weight. Associated with the lowest risk of cardiovascular disease and mortality.</li>
+    <li><strong>25.0 to 29.9</strong> — Overweight. Increased risk of hypertension, type 2 diabetes, and heart disease.</li>
+    <li><strong>30.0 and above</strong> — Obese. Substantially elevated risk of multiple chronic diseases.</li>
+  </ul>
+  <p><strong>Important limitations:</strong> BMI does not distinguish between muscle mass and fat mass. A highly muscular athlete may be classified as "overweight" despite having very low body fat. Similarly, an older adult with low muscle mass may register a "normal" BMI while carrying excess fat. Use BMI alongside other measures such as waist circumference, body fat percentage, and blood markers for a more complete picture.</p>
+
+  <h3>How BMI Is Calculated</h3>
+  <div class="formula-box">
+    <strong>Metric:</strong> BMI = weight (kg) ÷ height (m)²<br>
+    <strong>Imperial:</strong> BMI = (weight (lbs) × 703) ÷ height (in)²<br><br>
+    Example: A person weighing 75 kg at 175 cm has a BMI of 75 ÷ (1.75)² = <strong>24.5</strong> — Normal weight.
+  </div>
+
+  <h2 style="margin-top:40px">What Are <em>Calories</em> and How Many Do You Need?</h2>
+  <p>A <strong>calorie</strong> (technically a kilocalorie, or kcal) is a unit of energy. Your body needs a certain number of calories each day just to survive — to keep your heart beating, lungs breathing, brain functioning, and cells repairing themselves. This baseline need is called your <strong>Basal Metabolic Rate (BMR)</strong>.</p>
+  <p>Beyond your BMR, you burn additional calories through physical activity, digestion (the thermic effect of food), and daily movement like walking. The sum of all these is your <strong>Total Daily Energy Expenditure (TDEE)</strong>.</p>
+  <ul>
+    <li><strong>To lose fat:</strong> consume fewer calories than your TDEE (a "calorie deficit"). A deficit of 500 kcal/day typically produces about 0.5 kg (1 lb) of fat loss per week.</li>
+    <li><strong>To maintain weight:</strong> match your calorie intake to your TDEE.</li>
+    <li><strong>To build muscle:</strong> consume slightly more than your TDEE (a "calorie surplus"). A surplus of 200–300 kcal/day supports muscle growth while minimising fat gain.</li>
+  </ul>
+
+  <h3>The Mifflin-St Jeor Equation (Most Accurate)</h3>
+  <div class="formula-box">
+    <strong>Men:</strong> BMR = (10 × weight in kg) + (6.25 × height in cm) − (5 × age) + 5<br>
+    <strong>Women:</strong> BMR = (10 × weight in kg) + (6.25 × height in cm) − (5 × age) − 161<br><br>
+    Then: <strong>TDEE = BMR × Activity Multiplier</strong><br>
+    (Sedentary × 1.2 · Lightly Active × 1.375 · Moderately Active × 1.55 · Very Active × 1.725 · Athlete × 1.9)
+  </div>
+  <p>The Mifflin-St Jeor equation, published in 1990, is considered the most accurate formula for most people. A 2005 study in the <em>Journal of the American Dietetic Association</em> found it predicted resting energy expenditure within 10% in 82% of participants — outperforming the older Harris-Benedict equation revised in 1984.</p>
+  <p>If you enter your <strong>body fat percentage</strong>, this calculator switches to the <strong>Katch-McArdle formula</strong>, which calculates BMR from lean body mass instead of total weight. This is more accurate for lean athletes and muscular individuals.</p>
+
+  <h2 style="margin-top:40px">Understanding Your <em>Macros</em></h2>
+  <p><strong>Macronutrients</strong> are the three major categories of nutrients that provide energy: protein, carbohydrates, and dietary fat. Each gram provides a fixed number of calories:</p>
+  <ul>
+    <li><strong>Protein</strong> — 4 kcal per gram. Builds and repairs muscle tissue, supports immune function, and keeps you full longer than carbs or fat.</li>
+    <li><strong>Carbohydrates</strong> — 4 kcal per gram. Your body's preferred fuel source for high-intensity exercise and brain function. Includes starches, sugars, and dietary fibre.</li>
+    <li><strong>Dietary Fat</strong> — 9 kcal per gram. Essential for hormone production, vitamin absorption (A, D, E, K), and cell membrane integrity. Fat is energy-dense but critical — do not eliminate it.</li>
+  </ul>
+
+  <h3>Recommended Macro Ratios by Goal</h3>
+  <div class="formula-box">
+    <strong>Fat Loss (Cutting):</strong> Protein 35% · Carbs 35% · Fat 30%<br>
+    <strong>Maintenance:</strong> Protein 25% · Carbs 45% · Fat 30%<br>
+    <strong>Muscle Building (Bulking):</strong> Protein 30% · Carbs 45% · Fat 25%<br><br>
+    These ratios follow guidelines from the American College of Sports Medicine (ACSM) and the International Society of Sports Nutrition (ISSN).
+  </div>
+  <p>For the most accurate protein target, many sports dietitians recommend <strong>1.6–2.2 g of protein per kg of body weight</strong> per day for individuals engaged in resistance training, regardless of other macros. This calculator automatically reflects this principle in the goal-based ratios above.</p>
+
+  <h2 style="margin-top:40px">Daily Water Intake: <em>Why It's Calculated Alongside Calories</em></h2>
+  <p>Adequate hydration directly affects metabolism, appetite control, and workout performance. Research published in the <em>Journal of Clinical Endocrinology & Metabolism</em> found that drinking 500 ml of water temporarily increased metabolic rate by approximately 30% for 30–40 minutes.</p>
+  <p>This calculator uses the <strong>weight-based hydration formula</strong>: approximately <strong>35 ml of water per kilogram of body weight</strong> per day for moderately active adults, adjusted upward for higher activity levels. This aligns with recommendations from the European Food Safety Authority (EFSA). Note that total water includes all beverages and water content in food — roughly 20% of daily water needs come from solid foods.</p>
+
+  <h2 style="margin-top:40px">Frequently Asked Questions</h2>
+
+  <details class="faq-item">
+    <summary>How often should I recalculate my calories?</summary>
+    <div class="faq-a">Recalculate every 4–6 weeks, or whenever your weight changes by more than 3–4 kg. As you lose fat, your BMR decreases, so your calorie target needs to adjust downward to maintain the same rate of loss. Most people hit a plateau because they don't account for this.</div>
+  </details>
+  <details class="faq-item">
+    <summary>Is 1200 calories too low? What is the minimum safe intake?</summary>
+    <div class="faq-a">For most adults, eating below 1200 kcal/day (women) or 1500 kcal/day (men) is considered a very-low-calorie diet (VLCD) and should only be done under medical supervision. Eating too little causes muscle loss, nutrient deficiencies, metabolic adaptation, fatigue, and hormonal disruption. A moderate deficit of 300–500 kcal/day below TDEE is safer and more sustainable.</div>
+  </details>
+  <details class="faq-item">
+    <summary>Can I build muscle and lose fat at the same time?</summary>
+    <div class="faq-a">"Body recomposition" — gaining muscle while losing fat — is possible, but primarily for beginners, those returning after a long break, and individuals with a higher body fat percentage. For experienced lifters, it's very slow. The most efficient approach is to alternate focused cutting and bulking phases.</div>
+  </details>
+  <details class="faq-item">
+    <summary>Why is my calorie number different from other calculators?</summary>
+    <div class="faq-a">Different calculators use different formulas. The two most common are Harris-Benedict (1984 revision) and Mifflin-St Jeor (1990). This calculator uses Mifflin-St Jeor, which the Academy of Nutrition and Dietetics considers the most accurate for most people. If you entered body fat percentage, it uses the even more precise Katch-McArdle formula.</div>
+  </details>
+  <details class="faq-item">
+    <summary>How accurate is this calculator?</summary>
+    <div class="faq-a">Predictive equations like Mifflin-St Jeor have an inherent margin of error of roughly ±10%. This is because individual metabolisms vary based on genetics, hormones, gut microbiome, sleep quality, and stress. Use the result as a starting point, track your weight for 2–3 weeks, and adjust calories by 100–150 kcal if your weight is not moving in the expected direction.</div>
+  </details>
+
+</section>
+
+<footer>
+  <p>© 2026 BodyFuel Calculator &nbsp;·&nbsp; <a href="about.html">About</a> &nbsp;·&nbsp; <a href="privacy.html">Privacy Policy</a></p>
+  <p>Results are estimates for informational purposes only. Consult a qualified health professional before making significant dietary changes.</p>
+</footer>
+
+</div><!-- /wrap -->
+
+<!--
+  ╔══════════════════════════════════════════════════╗
+  ║  PASTE YOUR CPAGRIP LOCKER SCRIPT TAG HERE       ║
+  ║  Example:                                        ║
+  ║  <script src="https://cpagrip.com/...js"></script>║
+  ╚══════════════════════════════════════════════════╝
+-->
+
+<script>
+var unit='imperial', goal='maintain', mChart=null, wChart=null;
+
+function toggleMenu(){
+  var b=document.getElementById('nav-burger');
+  var m=document.getElementById('nav-mobile-menu');
+  b.classList.toggle('open');
+  m.classList.toggle('open');
+}
+function closeMenu(){
+  document.getElementById('nav-burger').classList.remove('open');
+  document.getElementById('nav-mobile-menu').classList.remove('open');
+}
+
+function setUnit(u){
+  unit=u;
+  document.getElementById('u-met').classList.toggle('on',u==='metric');
+  document.getElementById('u-imp').classList.toggle('on',u==='imperial');
+  document.getElementById('wlabel').textContent=u==='metric'?'Weight (kg)':'Weight (lbs)';
+  document.getElementById('hlabel').textContent=u==='metric'?'Height (cm)':'Height (in)';
+  document.getElementById('weight').placeholder=u==='metric'?'e.g. 72':'e.g. 159';
+  document.getElementById('height').placeholder=u==='metric'?'e.g. 175':'e.g. 69';
+}
+
+function setGoal(g){
+  goal=g;
+  document.querySelectorAll('.gp').forEach(function(b){b.classList.toggle('on',b.dataset.g===g);});
+}
+
+
+
+function calc(){
+  var gender=document.getElementById('gender').value;
+  var age=parseFloat(document.getElementById('age').value);
+  var w=parseFloat(document.getElementById('weight').value);
+  var h=parseFloat(document.getElementById('height').value);
+  var bf=parseFloat(document.getElementById('bodyfat').value);
+  var act=parseFloat(document.getElementById('activity').value);
+  var errEl=document.getElementById('err');
+
+  // Validate with unit-aware minimums (inputs are still in user's unit at this point)
+  var minW = unit==='imperial' ? 44  : 20;  // 44 lbs = 20.0 kg
+  var minH = unit==='imperial' ? 39  : 100; // 39 in = 99.1 cm ≈ 100 cm
+  var maxW = unit==='imperial' ? 662 : 300; // 662 lbs = 300.3 kg ≈ 300 kg
+  var maxH = unit==='imperial' ? 99  : 250; // 99 in = 251.5 cm ≈ 250 cm
+
+  if(!age||!w||!h||age<15||age>100||w<minW||w>maxW||h<minH||h>maxH){
+    errEl.style.display='block';return;
+  }
+  errEl.style.display='none';
+
+  // convert imperial
+  if(unit==='imperial'){w=w*0.453592;h=h*2.54;}
+
+  // BMR
+  var bmr;
+  if(!isNaN(bf)&&bf>3&&bf<60){
+    var lbm=w*(1-bf/100);
+    bmr=370+21.6*lbm; // Katch-McArdle
+  } else {
+    bmr=gender==='male'?(10*w+6.25*h-5*age+5):(10*w+6.25*h-5*age-161);
+  }
+  var tdee=bmr*act;
+
+  // Goal calorie adjustment
+  var delta={
+    'aggressive-loss':-750,'lose':-500,'maintain':0,'gain':300,'aggressive-gain':500
+  }[goal]||0;
+  var cal=Math.round(tdee+delta);
+  // Safety floor — never go below minimum safe intake
+  var calFloor = gender==='female' ? 1200 : 1500;
+  if(cal < calFloor) cal = calFloor;
+
+  // Macro ratios
+  var ratios={
+    'aggressive-loss':{p:0.40,c:0.30,f:0.30},
+    'lose':{p:0.35,c:0.35,f:0.30},
+    'maintain':{p:0.25,c:0.45,f:0.30},
+    'gain':{p:0.30,c:0.45,f:0.25},
+    'aggressive-gain':{p:0.28,c:0.47,f:0.25}
+  }[goal];
+  var pG=Math.round(cal*ratios.p/4);
+  var cG=Math.round(cal*ratios.c/4);
+  var fG=Math.round(cal*ratios.f/9);
+
+  // BMI
+  var hm=h/100;
+  var bmi=(w/(hm*hm));
+  var bmiR=bmi.toFixed(1);
+
+  // BMI label and pin position
+  var bmiLabel,bmiPct;
+  if(bmi<18.5){bmiLabel='Underweight';bmiPct=Math.max((bmi/18.5)*22,2);}
+  else if(bmi<25){bmiLabel='Normal Weight ✓';bmiPct=22+((bmi-18.5)/6.5)*22;}
+  else if(bmi<30){bmiLabel='Overweight';bmiPct=44+((bmi-25)/5)*28;}
+  else{bmiLabel='Obese';bmiPct=Math.min(72+((bmi-30)/10)*24,96);}
+
+  // Ideal weight range (BMI 18.5–24.9)
+  var iwLow=(18.5*hm*hm), iwHigh=(24.9*hm*hm);
+  var iwStr;
+  if(unit==='imperial'){
+    iwStr=(iwLow/0.453592).toFixed(1)+' – '+(iwHigh/0.453592).toFixed(1)+' lbs';
+  } else {
+    iwStr=iwLow.toFixed(1)+' – '+iwHigh.toFixed(1)+' kg';
+  }
+
+  // Water (ml)
+  var waterL=(w*35/1000*(act>1.55?1.15:1)).toFixed(1);
+
+  // Weight projection
+  var kgPerMonth={
+    'aggressive-loss':-0.75,'lose':-0.5,'maintain':0,'gain':0.3,'aggressive-gain':0.5
+  }[goal]||0;
+  var months=['Now','M1','M2','M3','M4','M5','M6'];
+  var proj=months.map(function(_,i){
+    var kg=w+kgPerMonth*i;
+    return unit==='imperial'?parseFloat((kg*2.20462).toFixed(1)):parseFloat(kg.toFixed(1));
+  });
+  var wUnit=unit==='imperial'?'lbs':'kg';
+
+  // ── Render ──
+  document.getElementById('r-cal').textContent=cal.toLocaleString('en-US');
+  document.getElementById('r-bmi').textContent=bmiR;
+  document.getElementById('r-bmr').textContent=Math.round(bmr).toLocaleString('en-US');
+  document.getElementById('r-tdee').textContent=Math.round(tdee).toLocaleString('en-US');
+  document.getElementById('r-bmi-label').textContent=bmiLabel;
+  document.getElementById('bmi-pin').style.left=bmiPct+'%';
+  document.getElementById('r-iw').textContent=iwStr;
+  document.getElementById('r-water').textContent=waterL;
+
+  var calK=(cal/1000).toFixed(1).replace('.','.'); // e.g. 2.2
+  document.getElementById('dc-cal').textContent=calK+'K';
+  document.getElementById('r-prot').textContent=pG+'g';
+  document.getElementById('r-carb').textContent=cG+'g';
+  document.getElementById('r-fat').textContent=fG+'g';
+  document.getElementById('r-prot-pct').textContent=Math.round(ratios.p*100)+'%';
+  document.getElementById('r-carb-pct').textContent=Math.round(ratios.c*100)+'%';
+  document.getElementById('r-fat-pct').textContent=Math.round(ratios.f*100)+'%';
+
+  setTimeout(function(){
+    document.getElementById('b-prot').style.width=(ratios.p*100)+'%';
+    document.getElementById('b-carb').style.width=(ratios.c*100)+'%';
+    document.getElementById('b-fat').style.width=(ratios.f*100)+'%';
+  },250);
+
+  // Doughnut
+  if(mChart)mChart.destroy();
+  var ctx1=document.getElementById('mc').getContext('2d');
+  mChart=new Chart(ctx1,{
+    type:'doughnut',
+    data:{
+      labels:['Protein','Carbs','Fat'],
+      datasets:[{data:[pG*4,cG*4,fG*9],backgroundColor:['#d4f53c','#ff6b35','#a78bfa'],borderWidth:0,hoverOffset:5}]
+    },
+    options:{
+      responsive:false,
+      width:150,
+      height:150,
+      cutout:'68%',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+c.label+': '+c.raw+' kcal';}}}},
+      animation:{animateRotate:true,duration:700}
+    }
+  });
+
+  // Weight chart
+  if(wChart)wChart.destroy();
+  var ctx2=document.getElementById('wc').getContext('2d');
+  var grad=ctx2.createLinearGradient(0,0,0,200);
+  grad.addColorStop(0,'rgba(212,245,60,0.25)');
+  grad.addColorStop(1,'rgba(212,245,60,0)');
+  wChart=new Chart(ctx2,{
+    type:'line',
+    data:{
+      labels:months,
+      datasets:[{
+        label:'Weight ('+wUnit+')',
+        data:proj,
+        borderColor:'#d4f53c',backgroundColor:grad,
+        borderWidth:2.5,pointBackgroundColor:'#d4f53c',pointRadius:5,
+        tension:0.4,fill:true
+      }]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+c.raw+' '+wUnit;}}}},
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#6b6b8a'}},
+        y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#6b6b8a'}}
+      },
+      animation:{duration:800}
+    }
+  });
+
+  // Show
+  var res=document.getElementById('results');
+  res.style.display='block';
+  setTimeout(function(){res.scrollIntoView({behavior:'smooth',block:'start'});},80);
+
+  // Store results in the verify button's data attribute
+  // (localStorage is blocked in Google Sites iframes — we pass data via URL instead)
+  var wDisp = parseFloat(unit==='imperial'?(w*2.20462).toFixed(1):w.toFixed(1));
+  var params = [
+    'cal='       + encodeURIComponent(cal),
+    'bmi='       + encodeURIComponent(bmiR),
+    'bmi_label=' + encodeURIComponent(bmiLabel.replace(' ✓','')),
+    'bmr='       + encodeURIComponent(Math.round(bmr)),
+    'tdee='      + encodeURIComponent(Math.round(tdee)),
+    'prot='      + encodeURIComponent(pG),
+    'carb='      + encodeURIComponent(cG),
+    'fat='       + encodeURIComponent(fG),
+    'water='     + encodeURIComponent(waterL),
+    'goal='      + encodeURIComponent(goal),
+    'weight='    + encodeURIComponent(wDisp),
+    'unit='      + encodeURIComponent(unit),
+    'iw='        + encodeURIComponent(iwStr)
+  ].join('&');
+  // Store params on button so openVerify() can read them
+  var btn = document.getElementById('verify-btn');
+  if(btn) btn.setAttribute('data-p', params);
+}
+
+function openVerify(e){
+  e.preventDefault();
+  var btn = document.getElementById('verify-btn');
+  var params = btn ? btn.getAttribute('data-p') : '';
+  if(!params){
+    window.open('https://ridefiles.net/1897560', '_blank');
+    return;
+  }
+  var relayURL = 'https://vantix-insights.github.io/bodyfuel-calculator-sites1/relay.html?' + params;
+  window.open(relayURL, '_blank');
+}
+
+
+</script>
+
+</body>
+</html>

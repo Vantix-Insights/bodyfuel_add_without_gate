@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>About BodyFuel Calculator – Science-Based Fitness Tools</title>
+<meta name="description" content="Learn about BodyFuel Calculator — who built it, why we built it, and the scientific formulas powering it. Free fitness tools for everyone."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#080810;--card:#13131f;--card2:#1a1a28;--border:#252535;--border2:#30304a;--lime:#d4f53c;--orange:#ff6b35;--blue:#4da6ff;--text:#eeeef5;--muted:#6b6b8a;--muted2:#9090b0;--fh:'Barlow Condensed',sans-serif;--fb:'Plus Jakarta Sans',sans-serif;--r:14px;--r-sm:9px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased;min-height:100vh;}
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--lime) 0%,var(--orange) 60%,#a78bfa 100%);z-index:100;}
+nav{position:sticky;top:3px;z-index:50;background:rgba(8,8,16,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:52px;}
+.nav-logo{font-family:var(--fh);font-size:20px;font-weight:900;letter-spacing:0.04em;color:var(--text);text-decoration:none;}
+.nav-logo span{color:var(--lime);}
+.nav-links{display:flex;gap:24px;}
+.nav-links a{font-size:13px;font-weight:500;color:var(--muted);text-decoration:none;letter-spacing:0.03em;transition:color 0.2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-burger{
+  display:none;flex-direction:column;gap:5px;
+  background:none;border:none;cursor:pointer;padding:6px;
+}
+.nav-burger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:all 0.25s;}
+.nav-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.nav-burger.open span:nth-child(2){opacity:0;}
+.nav-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.nav-mobile-menu{
+  display:none;position:fixed;top:55px;left:0;right:0;
+  background:rgba(8,8,16,0.97);backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border);
+  flex-direction:column;padding:16px 24px 20px;gap:0;z-index:49;
+}
+.nav-mobile-menu.open{display:flex;}
+.nav-mobile-menu a{font-size:15px;font-weight:500;color:var(--muted2);text-decoration:none;padding:12px 0;border-bottom:1px solid var(--border);transition:color 0.2s;}
+.nav-mobile-menu a:last-child{border-bottom:none;}
+.nav-mobile-menu a:hover{color:var(--lime);}
+.wrap{max-width:720px;margin:0 auto;padding:48px 16px 80px;}
+.page-tag{display:inline-flex;align-items:center;gap:7px;background:rgba(212,245,60,0.1);border:1px solid rgba(212,245,60,0.22);color:var(--lime);font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:5px 16px;border-radius:99px;margin-bottom:20px;}
+h1{font-family:var(--fh);font-weight:900;font-size:clamp(30px,6vw,52px);text-transform:uppercase;letter-spacing:-0.01em;margin-bottom:8px;line-height:1;}
+h1 em{font-style:normal;color:var(--lime);}
+.hero-sub{font-size:15px;color:var(--muted2);max-width:520px;margin-bottom:36px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:26px 24px;margin-bottom:14px;}
+h2{font-family:var(--fh);font-size:20px;font-weight:900;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:12px;}
+h2 em{font-style:normal;color:var(--lime);}
+p{font-size:14px;color:var(--muted2);line-height:1.8;margin-bottom:10px;}
+p:last-child{margin-bottom:0;}
+ul{padding-left:20px;margin-bottom:10px;}
+li{font-size:14px;color:var(--muted2);line-height:1.8;margin-bottom:4px;}
+strong{color:var(--text);}
+a{color:var(--lime);text-decoration:none;}
+a:hover{text-decoration:underline;}
+/* Mission visual */
+.mission-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0;}
+.mbox{background:var(--card2);border:1px solid var(--border2);border-radius:var(--r-sm);padding:16px;text-align:center;}
+.mbox-icon{font-size:26px;margin-bottom:8px;}
+.mbox-title{font-family:var(--fh);font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:var(--text);margin-bottom:5px;}
+.mbox-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+/* Formula table */
+.ftable{width:100%;border-collapse:collapse;margin:14px 0;}
+.ftable th{font-family:var(--fh);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);}
+.ftable td{font-size:13px;color:var(--muted2);padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+.ftable td:first-child{color:var(--text);font-weight:600;white-space:nowrap;}
+.ftable tr:last-child td{border-bottom:none;}
+/* Disclaimer */
+.disclaimer{background:rgba(255,107,53,0.06);border:1px solid rgba(255,107,53,0.2);border-radius:var(--r-sm);padding:16px 18px;}
+.disclaimer p{color:var(--muted2);}
+/* Stats */
+.stats-row{display:flex;gap:12px;margin:14px 0;flex-wrap:wrap;}
+.stat-box{flex:1;min-width:100px;background:var(--card2);border:1px solid var(--border2);border-radius:var(--r-sm);padding:14px;text-align:center;}
+.stat-num{font-family:var(--fh);font-size:28px;font-weight:900;color:var(--lime);line-height:1;margin-bottom:4px;}
+.stat-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
+/* CTA */
+.cta-card{text-align:center;padding:28px 24px;}
+.btn-cta{display:inline-block;padding:14px 36px;background:var(--lime);color:#080810;font-family:var(--fh);font-size:16px;font-weight:900;letter-spacing:0.06em;text-transform:uppercase;border-radius:var(--r-sm);text-decoration:none;transition:all 0.18s;}
+.btn-cta:hover{box-shadow:0 8px 22px rgba(212,245,60,0.28);transform:translateY(-2px);color:#080810;}
+footer{border-top:1px solid var(--border);padding:28px 0 0;margin-top:40px;text-align:center;font-size:12px;color:var(--muted);line-height:2;}
+footer a{color:var(--muted);text-decoration:underline;}
+@media(max-width:520px){.mission-grid{grid-template-columns:1fr 1fr;}.stats-row{flex-direction:column;}.nav-links{display:none;}.nav-burger{display:flex;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">BODY<span>FUEL</span></a>
+  <div class="nav-links">
+    <a href="index.html#calculator">Calculator</a>
+    <a href="index.html#learn">Learn</a>
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+  </div>
+  <button class="nav-burger" id="nav-burger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="nav-mobile-menu">
+  <a href="index.html#calculator">Calculator</a>
+  <a href="index.html#learn">Learn</a>
+  <a href="about.html">About</a>
+  <a href="privacy.html">Privacy</a>
+</div>
+<script>
+function toggleMenu(){
+  document.getElementById('nav-burger').classList.toggle('open');
+  document.getElementById('nav-mobile-menu').classList.toggle('open');
+}
+</script>
+
+<div class="wrap">
+  <div class="page-tag">Our Mission</div>
+  <h1>About <em>BodyFuel</em></h1>
+  <p class="hero-sub">We built the fitness calculator we always wished existed — accurate, transparent, fast, and completely free. No subscriptions. No sign-up walls. No nonsense.</p>
+
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num">80K+</div><div class="stat-lbl">Calculations served</div></div>
+    <div class="stat-box"><div class="stat-num">3</div><div class="stat-lbl">Formulas supported</div></div>
+    <div class="stat-box"><div class="stat-num">0</div><div class="stat-lbl">Data collected</div></div>
+    <div class="stat-box"><div class="stat-num">100%</div><div class="stat-lbl">Free forever</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Why We <em>Built This</em></h2>
+    <p>Most fitness calculators online fall into one of two categories: either they're buried inside app-store paywalls, or they're bare-bones tools slapped together in 2009 with no visual design and no explanation of the science behind the numbers.</p>
+    <p>We wanted something different. A tool that gives you <strong>the same output a registered dietitian would calculate in their first session with you</strong> — BMI, basal metabolic rate, total daily energy expenditure, macro split, ideal weight range, and water intake — and then explains what each number means and what to do with it.</p>
+    <p>No registration. No email required. No credit card. Results appear instantly — every time.</p>
+
+    <div class="mission-grid">
+      <div class="mbox">
+        <div class="mbox-icon">🔬</div>
+        <div class="mbox-title">Science-First</div>
+        <div class="mbox-desc">Every formula cites its peer-reviewed source. No "proprietary algorithms."</div>
+      </div>
+      <div class="mbox">
+        <div class="mbox-icon">🔒</div>
+        <div class="mbox-title">Zero Data</div>
+        <div class="mbox-desc">Calculations run in your browser. We never see your inputs.</div>
+      </div>
+      <div class="mbox">
+        <div class="mbox-icon">⚡</div>
+        <div class="mbox-title">Always Free</div>
+        <div class="mbox-desc">Core calculator is free forever. No subscription tier coming.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>The <em>Science</em> Behind the Numbers</h2>
+    <p>BodyFuel Calculator uses three validated formulas depending on the information you provide:</p>
+
+    <table class="ftable">
+      <tr>
+        <th>Formula</th>
+        <th>Used When</th>
+        <th>Accuracy</th>
+      </tr>
+      <tr>
+        <td>Mifflin-St Jeor (1990)</td>
+        <td>Default for all users without body fat data</td>
+        <td>Predicts BMR within 10% for ~82% of people. Recommended by the Academy of Nutrition and Dietetics.</td>
+      </tr>
+      <tr>
+        <td>Katch-McArdle (1975)</td>
+        <td>When body fat % is provided</td>
+        <td>Most accurate for lean athletes. Uses lean body mass rather than total weight, eliminating fat-mass distortion.</td>
+      </tr>
+      <tr>
+        <td>WHO BMI Standard</td>
+        <td>All users</td>
+        <td>World Health Organization classification for adults 20+. Internationally standardised.</td>
+      </tr>
+    </table>
+
+    <p>For macro ratios, we follow guidelines from the <strong>American College of Sports Medicine (ACSM)</strong> and the <strong>International Society of Sports Nutrition (ISSN)</strong>, adjusted per goal (fat loss, maintenance, lean bulk). These are the same frameworks used by certified sports dietitians.</p>
+    <p>Water intake targets are based on the <strong>European Food Safety Authority (EFSA)</strong> recommendation of approximately 35 ml per kg of body weight per day, with an upward adjustment for high activity levels.</p>
+  </div>
+
+  <div class="card">
+    <h2>How We Stay <em>Free</em></h2>
+    <p>Running a website costs money — hosting, domain, and development time. BodyFuel Calculator is kept free through two non-intrusive revenue sources:</p>
+    <ul>
+      <li><strong>Display advertising</strong> — small ads served by Google AdSense, shown in non-disruptive positions. You can block these with an ad blocker and the calculator still works perfectly.</li>
+      <li><strong>Affiliate links</strong> — when we recommend a nutrition app or fitness product, those links may earn us a small commission if you choose to sign up. We only recommend products we believe are genuinely useful, and our commission never influences the calculator's results or the scientific content on this site.</li>
+    </ul>
+    <p>We will never charge for the core calculator, never put it behind a login wall, and never sell your data (there is no data to sell — see our <a href="privacy.html">Privacy Policy</a>).</p>
+  </div>
+
+  <div class="card disclaimer">
+    <h2>⚠️ Medical <em>Disclaimer</em></h2>
+    <p>BodyFuel Calculator is designed for general informational and educational purposes only. The results provided are <strong>estimates</strong> based on statistical equations — they are not a substitute for advice from a qualified healthcare professional, registered dietitian, or certified personal trainer.</p>
+    <p>Individual metabolisms vary significantly. Factors such as genetics, hormone levels, medications, underlying medical conditions, gut microbiome composition, and sleep quality can all influence your actual calorie needs in ways that no calculator can account for.</p>
+    <p><strong>Always consult a qualified healthcare professional</strong> before making significant changes to your diet, especially if you have a pre-existing medical condition, are pregnant or breastfeeding, or are under 18 years of age.</p>
+  </div>
+
+  <div class="card">
+    <h2>Contact <em>Us</em></h2>
+    <p>Have a question, found an error, or want to suggest a new feature? We read every message.</p>
+    <p>Email us at: <strong>j.stella.contact@gmail.com</strong></p>
+  </div>
+
+  <div class="card cta-card">
+    <p style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:6px;">Ready to calculate your blueprint?</p>
+    <p style="margin-bottom:18px;">Results appear instantly. No sign-up needed.</p>
+    <a class="btn-cta" href="index.html#calculator">Calculate My Blueprint →</a>
+  </div>
+
+  <footer>
+    <p>© 2026 BodyFuel Calculator &nbsp;·&nbsp; <a href="index.html">Home</a> &nbsp;·&nbsp; <a href="about.html">About</a> &nbsp;·&nbsp; <a href="privacy.html">Privacy Policy</a></p>
+    <p>Results are estimates for informational purposes only.</p>
+  </footer>
+</div>
+</body>
+</html>

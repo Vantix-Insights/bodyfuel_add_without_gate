@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Your 12-Resource Bundle – BodyFuel Calculator</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#080810;--bg2:#0f0f1a;--card:#13131f;--card2:#1a1a28;
+  --border:#252535;--border2:#30304a;
+  --lime:#d4f53c;--lime-dim:rgba(212,245,60,0.1);--lime-b:rgba(212,245,60,0.25);
+  --orange:#ff6b35;--blue:#4da6ff;--purple:#a78bfa;--good:#4affa0;--red:#ff5c6a;
+  --text:#eeeef5;--muted:#6b6b8a;--muted2:#9090b0;
+  --fh:'Barlow Condensed',sans-serif;--fb:'Plus Jakarta Sans',sans-serif;
+  --r:14px;--r-sm:9px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased;min-height:100vh;}
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--lime) 0%,var(--orange) 60%,var(--purple) 100%);z-index:100;}
+
+/* NAV */
+nav{position:sticky;top:3px;z-index:50;background:rgba(8,8,16,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:52px;}
+.nav-logo{font-family:var(--fh);font-size:20px;font-weight:900;letter-spacing:0.04em;color:var(--text);text-decoration:none;}
+.nav-logo span{color:var(--lime);}
+.nav-links { display: flex; gap: 24px; }
+.nav-links a {
+  font-size: 13px; font-weight: 500; color: var(--muted);
+  text-decoration: none; letter-spacing: 0.03em;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text); }
+
+/* SESSION TIMER */
+.session-bar{background:rgba(255,92,106,0.08);border-bottom:1px solid rgba(255,92,106,0.2);padding:8px 20px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;}
+.session-bar-text{font-size:12px;color:var(--muted2);}
+.session-bar-text strong{color:var(--red);}
+#timer-display{font-family:var(--fh);font-size:20px;font-weight:900;color:var(--red);letter-spacing:0.08em;min-width:52px;display:inline-block;text-align:center;}
+.session-bar-cta{font-size:12px;color:var(--muted2);}
+.session-bar-cta strong{color:var(--lime);}
+
+/* WRAP */
+.wrap{max-width:740px;margin:0 auto;padding:0 16px 80px;}
+
+/* HERO */
+.hero{text-align:center;padding:36px 0 24px;}
+.unlock-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(74,255,160,0.1);border:1px solid rgba(74,255,160,0.3);color:var(--good);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:6px 16px;border-radius:99px;margin-bottom:18px;animation:popIn 0.5s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes popIn{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
+.unlock-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--good);}
+h1{font-family:var(--fh);font-size:clamp(28px,6vw,50px);font-weight:900;text-transform:uppercase;letter-spacing:-0.01em;line-height:1.05;margin-bottom:12px;}
+h1 em{font-style:normal;color:var(--lime);}
+
+/* PERSONALIZED NUMBERS CARD */
+.numbers-card{background:var(--card);border:1px solid rgba(212,245,60,0.2);border-radius:var(--r);padding:20px 22px;margin-bottom:20px;animation:fadeUp 0.4s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.nc-label{font-family:var(--fh);font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--lime);margin-bottom:14px;display:block;}
+.nc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+.nc-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 8px;text-align:center;}
+.nc-val{font-family:var(--fh);font-size:22px;font-weight:900;color:var(--lime);line-height:1;margin-bottom:3px;}
+.nc-sub{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
+.nc-no-data{font-size:13px;color:var(--muted2);text-align:center;padding:8px 0;}
+.nc-no-data a{color:var(--lime);text-decoration:none;}
+
+/* PROGRESS STRIP */
+.progress-strip{display:flex;align-items:stretch;margin-bottom:28px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.ps-item{flex:1;text-align:center;padding:12px 6px;position:relative;}
+.ps-item::after{content:'→';position:absolute;right:-8px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:12px;z-index:1;}
+.ps-item:last-child::after{display:none;}
+.ps-item.done{background:rgba(74,255,160,0.06);}
+.ps-item.now{background:var(--lime-dim);}
+.ps-num{font-family:var(--fh);font-size:18px;font-weight:900;line-height:1;margin-bottom:2px;}
+.ps-num.dc{color:var(--good);}
+.ps-num.nc{color:var(--lime);}
+.ps-num.xc{color:var(--muted);}
+.ps-label{font-size:10px;color:var(--muted);letter-spacing:0.04em;text-transform:uppercase;}
+
+/* QUICK INDEX */
+.resource-index{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:28px;}
+.ri-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r-sm);padding:11px;text-align:center;text-decoration:none;display:block;transition:all 0.18s;}
+.ri-box:hover{border-color:var(--lime-b);background:var(--lime-dim);transform:translateY(-2px);}
+.ri-box.locked-ri{opacity:0.45;cursor:default;}
+.ri-box.locked-ri:hover{border-color:var(--border);background:var(--card);transform:none;}
+.ri-icon{font-size:20px;margin-bottom:4px;}
+.ri-num{font-family:var(--fh);font-size:10px;font-weight:700;color:var(--lime);letter-spacing:0.08em;margin-bottom:2px;}
+.ri-name{font-size:11px;color:var(--muted2);line-height:1.3;}
+.ri-lock{font-size:10px;color:var(--muted);margin-top:2px;}
+
+/* RESOURCE CARDS */
+.res-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:26px 22px;margin-bottom:12px;animation:fadeUp 0.4s ease both;}
+.res-card:nth-child(2){animation-delay:.05s}.res-card:nth-child(3){animation-delay:.09s}.res-card:nth-child(4){animation-delay:.13s}
+.res-header{display:flex;align-items:flex-start;gap:13px;margin-bottom:16px;}
+.res-icon-wrap{width:46px;height:46px;border-radius:10px;background:var(--lime-dim);border:1px solid var(--lime-b);display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;}
+.res-num-label{font-size:10px;font-weight:700;color:var(--lime);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:3px;}
+.res-title{font-family:var(--fh);font-size:21px;font-weight:900;text-transform:uppercase;letter-spacing:0.02em;line-height:1;}
+.slabel{font-family:var(--fh);font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--lime);margin-bottom:9px;display:block;margin-top:16px;}
+p.rp{font-size:14px;color:var(--muted2);line-height:1.8;margin-bottom:11px;}
+p.rp strong{color:var(--text);}
+
+/* TABLES */
+.rtable{width:100%;border-collapse:collapse;margin:10px 0;}
+.rtable th{font-family:var(--fh);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 11px;border-bottom:1px solid var(--border);}
+.rtable td{font-size:13px;color:var(--muted2);padding:8px 11px;border-bottom:1px solid var(--border);vertical-align:top;}
+.rtable td:first-child{color:var(--text);font-weight:500;}
+.rtable tr:last-child td{border-bottom:none;}
+.td-l{color:var(--lime)!important;font-family:var(--fh);font-size:15px;font-weight:700;}
+.td-g{color:var(--good)!important;}
+.td-o{color:var(--orange)!important;}
+
+/* CALLOUTS */
+.callout{border-radius:var(--r-sm);padding:13px 15px;margin:12px 0;font-size:13px;line-height:1.7;}
+.callout.lime{background:var(--lime-dim);border-left:3px solid var(--lime);color:var(--muted2);}
+.callout.lime strong{color:var(--lime);}
+.callout.blue{background:rgba(77,166,255,0.07);border-left:3px solid var(--blue);color:var(--muted2);}
+.callout.blue strong{color:var(--blue);}
+.callout.orange{background:rgba(255,107,53,0.07);border-left:3px solid var(--orange);color:var(--muted2);}
+.callout.orange strong{color:var(--orange);}
+.callout.purple{background:rgba(167,139,250,0.07);border-left:3px solid var(--purple);color:var(--muted2);}
+.callout.purple strong{color:var(--purple);}
+.callout.red{background:rgba(255,92,106,0.07);border-left:3px solid var(--red);color:var(--muted2);}
+.callout.red strong{color:var(--red);}
+
+/* WEEK GRID */
+.week-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0;}
+.wbox{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:11px;}
+.wbox-label{font-family:var(--fh);font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:5px;}
+.wbox-val{font-family:var(--fh);font-size:19px;font-weight:900;color:var(--lime);line-height:1;margin-bottom:2px;}
+.wbox-sub{font-size:11px;color:var(--muted);}
+
+/* MEAL ROWS */
+.meal-row{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--border);}
+.meal-row:last-child{border-bottom:none;}
+.meal-time{font-family:var(--fh);font-size:13px;font-weight:700;color:var(--lime);width:68px;flex-shrink:0;}
+.meal-desc{font-size:13px;color:var(--muted2);flex:1;}
+.meal-macro{font-size:11px;color:var(--muted);flex-shrink:0;text-align:right;line-height:1.4;}
+
+/* TRACKER GRID */
+.tracker-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:10px 0;}
+.tg-head{font-size:10px;font-weight:600;color:var(--muted);text-align:center;padding:4px 2px;text-transform:uppercase;}
+.tg-cell{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:7px 3px;text-align:center;font-size:11px;color:var(--muted);}
+.tg-cell.filled{border-color:var(--lime-b);background:var(--lime-dim);color:var(--lime);}
+
+/* ══ EMAIL GATE WALL ══ */
+#email-gate{margin-bottom:12px;}
+.gate-wall{background:var(--card);border:1.5px solid rgba(212,245,60,0.3);border-radius:var(--r);overflow:hidden;position:relative;}
+
+/* Blurred preview of what's locked */
+.gate-blur-preview{filter:blur(5px);pointer-events:none;user-select:none;padding:22px;opacity:0.6;}
+.ghost-line{height:13px;border-radius:4px;background:var(--border);margin-bottom:9px;}
+
+/* Gate panel */
+.gate-panel{padding:28px 24px;background:linear-gradient(160deg,#13131f 0%,rgba(212,245,60,0.04) 100%);}
+.gate-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(212,245,60,0.1);border:1px solid rgba(212,245,60,0.28);color:var(--lime);font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 13px;border-radius:99px;margin-bottom:14px;}
+.gate-title{font-family:var(--fh);font-size:clamp(22px,4vw,32px);font-weight:900;text-transform:uppercase;letter-spacing:0.02em;line-height:1.05;margin-bottom:10px;}
+.gate-title em{font-style:normal;color:var(--lime);}
+.gate-desc{font-size:14px;color:var(--muted2);line-height:1.75;margin-bottom:18px;max-width:520px;}
+.gate-desc strong{color:var(--text);}
+
+/* 8 locked items mini-list */
+.gate-items{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px;}
+.gate-item{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 12px;}
+.gate-item-icon{font-size:16px;flex-shrink:0;}
+.gate-item-text{font-size:12px;color:var(--muted2);line-height:1.35;}
+.gate-item-text strong{color:var(--text);display:block;font-size:12px;}
+
+/* Timer warning inside gate */
+.gate-timer-warning{display:flex;align-items:center;gap:10px;padding:11px 14px;background:rgba(255,92,106,0.07);border:1px solid rgba(255,92,106,0.2);border-radius:var(--r-sm);margin-bottom:18px;font-size:13px;color:var(--muted2);}
+.gate-timer-warning strong{color:var(--red);}
+#gate-timer-inline{font-family:var(--fh);font-size:18px;font-weight:900;color:var(--red);}
+
+/* Email form */
+.gate-form{display:flex;gap:9px;margin-bottom:10px;flex-wrap:wrap;}
+.gate-input{flex:1;min-width:200px;background:var(--bg2);border:1.5px solid var(--border2);color:var(--text);font-family:var(--fb);font-size:14px;padding:13px 15px;border-radius:var(--r-sm);outline:none;transition:border-color 0.2s;}
+.gate-input:focus{border-color:var(--lime);}
+.gate-input::placeholder{color:var(--muted);}
+.gate-input.error{border-color:var(--red);}
+.gate-btn{background:var(--orange);color:#fff;font-family:var(--fh);font-size:16px;font-weight:900;letter-spacing:0.06em;text-transform:uppercase;border:none;border-radius:var(--r-sm);padding:13px 24px;cursor:pointer;white-space:nowrap;transition:all 0.18s;}
+.gate-btn:hover{box-shadow:0 8px 22px rgba(255,107,53,0.4);transform:translateY(-1px);}
+.gate-trust{display:flex;gap:14px;flex-wrap:wrap;}
+.gate-trust span{font-size:11px;color:var(--muted);}
+
+/* All resources visible */
+#locked-resources{display:block;}
+.unlock-confirmation{background:rgba(74,255,160,0.07);border:1px solid rgba(74,255,160,0.25);border-radius:var(--r);padding:18px 22px;margin-bottom:20px;display:flex;align-items:center;gap:14px;}
+.uc-icon{font-size:28px;flex-shrink:0;}
+.uc-text h3{font-family:var(--fh);font-size:18px;font-weight:900;text-transform:uppercase;letter-spacing:0.04em;color:var(--good);margin-bottom:4px;}
+.uc-text p{font-size:13px;color:var(--muted2);}
+
+/* GROCERY */
+.grocery-section{margin-bottom:14px;}
+.grocery-cat{font-family:var(--fh);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:var(--text);margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--border);}
+.grocery-items{display:flex;flex-wrap:wrap;gap:6px;}
+.gtag{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--muted2);}
+.gtag.hi{border-color:var(--lime-b);color:var(--lime);background:var(--lime-dim);}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:28px 0 0;margin-top:40px;text-align:center;font-size:12px;color:var(--muted);line-height:2;}
+footer a{color:var(--muted);text-decoration:underline;}
+
+/* TOGGLE BUTTONS — match index.html */
+.toggle{display:flex;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r-sm);overflow:hidden;}
+.toggle button{flex:1;padding:11px 6px;background:none;border:none;color:var(--muted);font-family:var(--fb);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.18s;}
+.toggle button.on{background:var(--lime);color:#080810;font-weight:700;}
+
+/* GOAL PILLS — match index.html */
+.gpills{display:flex;gap:9px;flex-wrap:wrap;}
+.gp{padding:8px 18px;border-radius:99px;border:1.5px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-family:var(--fb);font-size:13px;font-weight:500;transition:all 0.18s;}
+.gp.on{border-color:var(--lime);background:var(--lime-dim);color:var(--lime);}
+
+/* CALC BUTTON — match index.html */
+.btn-go{width:100%;padding:17px;background:var(--lime);color:#080810;font-family:var(--fh);font-size:18px;font-weight:900;letter-spacing:0.06em;text-transform:uppercase;border:none;border-radius:var(--r-sm);cursor:pointer;transition:all 0.18s;}
+.btn-go:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(212,245,60,0.28);}
+.btn-go:active{transform:translateY(0);box-shadow:none;}
+
+@media(max-width:520px){
+  .resource-index{grid-template-columns:repeat(2,1fr);}
+  .week-grid{grid-template-columns:repeat(2,1fr);}
+  .nc-grid{grid-template-columns:repeat(3,1fr);}
+  .tracker-grid{grid-template-columns:repeat(4,1fr);}
+  .gate-items{grid-template-columns:1fr;}
+  .progress-strip{flex-direction:column;}
+  .ps-item::after{display:none;}
+  .nav-links{display:none;}
+  .nav-hamburger{display:flex;}
+}
+.nav-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:4px;border-radius:6px;}
+.nav-hamburger span{display:block;height:2px;border-radius:2px;background:var(--muted);transition:all 0.25s;}
+.nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);background:var(--lime);}
+.nav-hamburger.open span:nth-child(2){opacity:0;}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);background:var(--lime);}
+.nav-mobile-menu{display:none;position:fixed;top:55px;left:0;right:0;z-index:49;background:rgba(8,8,16,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px 0;}
+.nav-mobile-menu.open{display:block;}
+.nav-mobile-menu a{display:block;padding:13px 28px;font-size:15px;font-weight:500;color:var(--muted2);text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.04);transition:color 0.18s,background 0.18s;}
+.nav-mobile-menu a:last-child{border-bottom:none;}
+.nav-mobile-menu a:hover{color:var(--lime);background:rgba(212,245,60,0.05);}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">BODY<span>FUEL</span></a>
+  <div class="nav-links">
+    <a href="index.html#calculator">Calculator</a>
+    <a href="index.html#learn">Learn</a>
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+  </div>
+  <button class="nav-hamburger" id="nav-hbg" aria-label="Menu" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="nav-mob">
+  <a href="index.html#calculator">Calculator</a>
+  <a href="index.html#learn">Learn</a>
+  <a href="about.html">About</a>
+  <a href="privacy.html">Privacy</a>
+</div>
+
+
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="unlock-badge">Access Granted — All 12 Resources Unlocked</div>
+    <h1>Your <em>12-Resource</em><br>System Is Ready</h1>
+  </header>
+
+  <!-- PERSONALIZED NUMBERS CARD -->
+  <div class="numbers-card" id="numbers-card">
+    <span class="nc-label">📊 Your Numbers — From This Session</span>
+    <div id="nc-content"></div>
+  </div>
+
+  <!-- PROGRESS STRIP -->
+  <div class="progress-strip">
+    <div class="ps-item done"><div class="ps-num dc">✓</div><div class="ps-label">Calculated</div></div>
+    <div class="ps-item done"><div class="ps-num dc">✓</div><div class="ps-label">Verified</div></div>
+    <div class="ps-item now"><div class="ps-num nc">→</div><div class="ps-label">All 12 Unlocked</div></div>
+  </div>
+
+  <!-- QUICK INDEX -->
+  <div class="resource-index">
+    <a class="ri-box" href="#r1"><div class="ri-icon">📅</div><div class="ri-num">01</div><div class="ri-name">12-Week Schedule</div></a>
+    <a class="ri-box" href="#r2"><div class="ri-icon">🍽️</div><div class="ri-num">02</div><div class="ri-name">7-Day Meal Plan</div></a>
+    <a class="ri-box" href="#r3"><div class="ri-icon">💪</div><div class="ri-num">03</div><div class="ri-name">Workout Macros</div></a>
+    <a class="ri-box" href="#r4"><div class="ri-icon">⏰</div><div class="ri-num">04</div><div class="ri-name">Meal Timing</div></a>
+    <a class="ri-box" href="#r5"><div class="ri-icon">🛒</div><div class="ri-num">05</div><div class="ri-name">Grocery List</div></a>
+    <a class="ri-box" href="#r6"><div class="ri-icon">🔄</div><div class="ri-num">06</div><div class="ri-name">Plateau Breaker</div></a>
+    <a class="ri-box" href="#r7"><div class="ri-icon">📊</div><div class="ri-num">07</div><div class="ri-name">Progress Tracker</div></a>
+    <a class="ri-box" href="#r8"><div class="ri-icon">🍕</div><div class="ri-num">08</div><div class="ri-name">Eating Out Guide</div></a>
+    <a class="ri-box" href="#r9"><div class="ri-icon">😴</div><div class="ri-num">09</div><div class="ri-name">Sleep & Recovery</div></a>
+    <a class="ri-box" href="#r10"><div class="ri-icon">🧃</div><div class="ri-num">10</div><div class="ri-name">Supplement Truth</div></a>
+    <a class="ri-box" href="#r11"><div class="ri-icon">🧠</div><div class="ri-num">11</div><div class="ri-name">Mindset Framework</div></a>
+    <a class="ri-box" href="#r12"><div class="ri-icon">🎯</div><div class="ri-num">12</div><div class="ri-name">Goal Roadmap</div></a>
+  </div>
+
+  <!-- ══ FREE RESOURCES 1–4 ══ -->
+
+  <!-- R1 -->
+  <div class="res-card" id="r1">
+    <div class="res-header"><div class="res-icon-wrap">📅</div><div><div class="res-num-label">Resource 01 of 12</div><div class="res-title">12-Week Calorie Schedule</div></div></div>
+    <p class="rp">Most people eat the same calories every week and wonder why they plateau at week 4. The fix is <strong>progressive calorie cycling</strong> — small planned adjustments that keep your metabolism adapting instead of stalling.</p>
+    <div class="callout lime"><strong>How to use this:</strong> Apply the adjustments to your TDEE shown in your numbers card above. Reassess every 4 weeks based on your actual 7-day average weight.</div>
+    <span class="slabel">Fat Loss — Moderate Cut</span>
+    <div class="week-grid">
+      <div class="wbox"><div class="wbox-label">Weeks 1–4</div><div class="wbox-val">TDEE −500</div><div class="wbox-sub">Establish deficit</div></div>
+      <div class="wbox"><div class="wbox-label">Weeks 5–8</div><div class="wbox-val">TDEE −400</div><div class="wbox-sub">Reverse plateau</div></div>
+      <div class="wbox"><div class="wbox-label">Weeks 9–10</div><div class="wbox-val">TDEE −150</div><div class="wbox-sub">Diet break — vital</div></div>
+      <div class="wbox"><div class="wbox-label">Weeks 11–12</div><div class="wbox-val">TDEE −500</div><div class="wbox-sub">Final push</div></div>
+      <div class="wbox"><div class="wbox-label">Expected loss</div><div class="wbox-val">4–6 kg</div><div class="wbox-sub">Mostly fat</div></div>
+      <div class="wbox"><div class="wbox-label">Protein target</div><div class="wbox-val">2× kg</div><div class="wbox-sub">Bodyweight in g</div></div>
+    </div>
+    <span class="slabel">Muscle Building — Lean Bulk</span>
+    <div class="week-grid">
+      <div class="wbox"><div class="wbox-label">Weeks 1–4</div><div class="wbox-val">TDEE +250</div><div class="wbox-sub">Controlled surplus</div></div>
+      <div class="wbox"><div class="wbox-label">Weeks 5–8</div><div class="wbox-val">TDEE +300</div><div class="wbox-sub">Progressive increase</div></div>
+      <div class="wbox"><div class="wbox-label">Weeks 9–12</div><div class="wbox-val">TDEE +350</div><div class="wbox-sub">Full adaptation</div></div>
+      <div class="wbox"><div class="wbox-label">Expected gain</div><div class="wbox-val">1–2 kg</div><div class="wbox-sub">Lean muscle</div></div>
+      <div class="wbox"><div class="wbox-label">Fat gain limit</div><div class="wbox-val">&lt;0.5 kg</div><div class="wbox-sub">Per month</div></div>
+      <div class="wbox"><div class="wbox-label">Protein target</div><div class="wbox-val">1.8× kg</div><div class="wbox-sub">Bodyweight in g</div></div>
+    </div>
+    <div class="callout orange"><strong>Critical rule:</strong> No movement in 14 days? Adjust by 100 kcal. Always use your 7-day average weight — never a single day reading.</div>
+  </div>
+
+  <!-- R2 -->
+  <div class="res-card" id="r2">
+    <div class="res-header"><div class="res-icon-wrap">🍽️</div><div><div class="res-num-label">Resource 02 of 12</div><div class="res-title">7-Day Meal Plan Template</div></div></div>
+    <p class="rp">A <strong>2,000 kcal template</strong> — scale every portion proportionally to match your personal calorie target shown in your numbers above. The structure stays constant regardless of target.</p>
+    <span class="slabel">Daily Meal Structure</span>
+    <div class="meal-row"><div class="meal-time">7:00 AM</div><div class="meal-desc"><strong style="color:var(--text)">Breakfast</strong> — 3 eggs + 2 whites scrambled, 2 slices whole grain toast, 1 banana</div><div class="meal-macro">~480 kcal<br>P:32g C:52g F:14g</div></div>
+    <div class="meal-row"><div class="meal-time">10:30 AM</div><div class="meal-desc"><strong style="color:var(--text)">Snack</strong> — 200g Greek yoghurt (0%), 1 tbsp honey, 20g almonds</div><div class="meal-macro">~320 kcal<br>P:22g C:28g F:11g</div></div>
+    <div class="meal-row"><div class="meal-time">1:00 PM</div><div class="meal-desc"><strong style="color:var(--text)">Lunch</strong> — 150g chicken breast, 150g brown rice (cooked), large salad, 1 tbsp olive oil</div><div class="meal-macro">~560 kcal<br>P:46g C:58g F:14g</div></div>
+    <div class="meal-row"><div class="meal-time">4:00 PM</div><div class="meal-desc"><strong style="color:var(--text)">Pre-workout</strong> — 1 apple, 2 tbsp peanut butter, 1 glass milk</div><div class="meal-macro">~320 kcal<br>P:14g C:38g F:13g</div></div>
+    <div class="meal-row"><div class="meal-time">7:30 PM</div><div class="meal-desc"><strong style="color:var(--text)">Dinner</strong> — 150g salmon or tuna, 200g sweet potato, 200g steamed broccoli</div><div class="meal-macro">~420 kcal<br>P:38g C:44g F:9g</div></div>
+    <div class="callout blue"><strong>Weekly variety rule:</strong> Rotate proteins — chicken Mon/Thu, fish Tue/Fri, eggs Wed, red meat once on weekend. Prevents micronutrient gaps and the boredom that makes people quit.</div>
+    <table class="rtable">
+      <tr><th>Macro</th><th>Amount</th><th>% calories</th><th>Target</th></tr>
+      <tr><td>Calories</td><td class="td-l">~2,100 kcal</td><td>—</td><td>Scale to your number above</td></tr>
+      <tr><td>Protein</td><td class="td-g">152g</td><td>29%</td><td>≥1.6g per kg bodyweight</td></tr>
+      <tr><td>Carbohydrates</td><td class="td-l">220g</td><td>42%</td><td>Fuel for training</td></tr>
+      <tr><td>Fat</td><td class="td-o">61g</td><td>26%</td><td>Minimum 20% total calories</td></tr>
+    </table>
+  </div>
+
+  <!-- R3 -->
+  <div class="res-card" id="r3">
+    <div class="res-header"><div class="res-icon-wrap">💪</div><div><div class="res-num-label">Resource 03 of 12</div><div class="res-title">Workout-Day vs. Rest-Day Macros</div></div></div>
+    <p class="rp"><strong>Carb cycling</strong> — more carbs on training days, fewer on rest days — improves body composition without changing your weekly calorie average. Most people eat the same every day and leave results on the table.</p>
+    <table class="rtable">
+      <tr><th>Day Type</th><th>Calories</th><th>Protein</th><th>Carbs</th><th>Fat</th></tr>
+      <tr><td>Training Day</td><td class="td-l">TDEE +0 to +100</td><td class="td-g">High</td><td class="td-l">High</td><td>Moderate</td></tr>
+      <tr><td>Rest Day</td><td class="td-o">TDEE −150 to −200</td><td class="td-g">High</td><td class="td-o">Low</td><td>Higher</td></tr>
+    </table>
+    <div class="callout lime"><strong>Example at 2,200 kcal TDEE:</strong> Training day = 2,250 kcal (280g carbs, 170g protein, 55g fat). Rest day = 2,000 kcal (160g carbs, 170g protein, 75g fat). Protein never changes.</div>
+  </div>
+
+  <!-- R4 -->
+  <div class="res-card" id="r4">
+    <div class="res-header"><div class="res-icon-wrap">⏰</div><div><div class="res-num-label">Resource 04 of 12</div><div class="res-title">Meal Timing Blueprint</div></div></div>
+    <p class="rp">Timing is a secondary factor — but costs nothing to implement and adds a measurable edge on top of your calorie and macro targets.</p>
+    <table class="rtable">
+      <tr><th>Window</th><th>What to eat</th><th>Why</th></tr>
+      <tr><td>On waking (30 min)</td><td>20–40g protein (eggs, yoghurt, shake)</td><td>Stops overnight muscle breakdown immediately</td></tr>
+      <tr><td>Pre-workout (1–2 hrs)</td><td>Carbs + moderate protein, low fat</td><td>Carbs fuel intensity; fat slows digestion</td></tr>
+      <tr><td>Post-workout (within 2 hrs)</td><td>Carbs + protein, 3:1 ratio</td><td>Replenishes glycogen, triggers muscle synthesis</td></tr>
+      <tr><td>Last meal</td><td>Slow protein (cottage cheese) + vegetables</td><td>Casein feeds muscles during overnight fast</td></tr>
+      <tr><td>Optional before bed</td><td>20g casein or 200g cottage cheese</td><td>Increases overnight muscle synthesis ~22%</td></tr>
+    </table>
+    <div class="callout blue"><strong>One rule that matters most:</strong> Eat your biggest carb meals around training. Eat highest fat meals away from training. That shift alone improves body composition without touching total calories.</div>
+  </div>
+
+  <!-- ══ RESOURCES 5–12 ══ -->
+  <div id="locked-resources">
+
+    <!-- R5 -->
+    <div class="res-card" id="r5">
+      <div class="res-header"><div class="res-icon-wrap">🛒</div><div><div class="res-num-label">Resource 05 of 12</div><div class="res-title">High-Protein Grocery List</div></div></div>
+      <p class="rp">Every item below gives you the <strong>highest protein for the lowest cost</strong>. Highlighted items are your foundation — always keep these at home.</p>
+      <div class="grocery-section"><div class="grocery-cat">Proteins</div><div class="grocery-items"><span class="gtag hi">Eggs</span><span class="gtag hi">Chicken breast</span><span class="gtag hi">Canned tuna</span><span class="gtag hi">Lentils (dal)</span><span class="gtag hi">Greek yoghurt</span><span class="gtag hi">Cottage cheese</span><span class="gtag">Salmon</span><span class="gtag">Shrimp</span><span class="gtag">Lean beef mince</span><span class="gtag hi">Chickpeas</span><span class="gtag">Tofu</span><span class="gtag">Low-fat milk</span></div></div>
+      <div class="grocery-section"><div class="grocery-cat">Carbohydrates</div><div class="grocery-items"><span class="gtag hi">Brown rice</span><span class="gtag hi">Oats</span><span class="gtag hi">Sweet potato</span><span class="gtag">Whole grain bread</span><span class="gtag">Quinoa</span><span class="gtag hi">Banana</span><span class="gtag">Apple</span><span class="gtag">Beans</span></div></div>
+      <div class="grocery-section"><div class="grocery-cat">Healthy Fats</div><div class="grocery-items"><span class="gtag hi">Peanut butter</span><span class="gtag">Olive oil</span><span class="gtag hi">Almonds / walnuts</span><span class="gtag">Avocado</span><span class="gtag">Flaxseed</span></div></div>
+      <div class="grocery-section"><div class="grocery-cat">Vegetables (eat freely)</div><div class="grocery-items"><span class="gtag hi">Spinach</span><span class="gtag hi">Broccoli</span><span class="gtag hi">Cucumber</span><span class="gtag">Tomato</span><span class="gtag">Capsicum</span><span class="gtag">Cauliflower</span><span class="gtag">Cabbage</span><span class="gtag">Mushrooms</span></div></div>
+      <div class="callout lime"><strong>Your foundation 7:</strong> eggs, chicken breast, lentils, Greek yoghurt, oats, brown rice, peanut butter. These alone let you hit your protein target daily at minimal cost.</div>
+    </div>
+
+    <!-- R6 -->
+    <div class="res-card" id="r6">
+      <div class="res-header"><div class="res-icon-wrap">🔄</div><div><div class="res-num-label">Resource 06 of 12</div><div class="res-title">Plateau-Breaker Protocol</div></div></div>
+      <p class="rp">A plateau = no weight movement in <strong>14 consecutive days</strong> despite following your plan. Your metabolism adapted. Here's how to break it without destroying your metabolism.</p>
+      <table class="rtable">
+        <tr><th>Step</th><th>Action</th><th>Duration</th></tr>
+        <tr><td>1 — Verify</td><td>Weigh your food for 3 days. Most "plateaus" are tracking errors.</td><td>3 days</td></tr>
+        <tr><td>2 — Diet break</td><td>Eat at TDEE (maintenance) for 7–14 days. Resets leptin and metabolic rate.</td><td>1–2 weeks</td></tr>
+        <tr><td>3 — Reduce further</td><td>After break, reduce by 100–150 kcal and resume.</td><td>Until next plateau</td></tr>
+        <tr><td>4 — Increase NEAT</td><td>Add 3,000–5,000 extra steps daily. Preserves muscle better than cutting food.</td><td>Ongoing</td></tr>
+        <tr><td>5 — Weekly refeed</td><td>Once per week eat at TDEE with +100–150g extra carbs.</td><td>Weekly</td></tr>
+      </table>
+      <div class="callout orange"><strong>Never drop below 1,200 kcal.</strong> Causes muscle loss, nutrient deficiencies, hormonal damage, and permanently lowers your maintenance calorie level. Always break plateaus upward first.</div>
+    </div>
+
+    <!-- R7 -->
+    <div class="res-card" id="r7">
+      <div class="res-header"><div class="res-icon-wrap">📊</div><div><div class="res-num-label">Resource 07 of 12</div><div class="res-title">Weekly Progress Tracker</div></div></div>
+      <p class="rp">Weigh every morning after bathroom, before eating. Use your <strong>7-day average</strong> — not daily numbers. Daily swings of 1–2 kg are normal water weight and mean nothing.</p>
+      <div class="tracker-grid">
+        <div class="tg-head">Mon</div><div class="tg-head">Tue</div><div class="tg-head">Wed</div><div class="tg-head">Thu</div><div class="tg-head">Fri</div><div class="tg-head">Sat</div><div class="tg-head">Sun</div>
+        <div class="tg-cell filled">78.2</div><div class="tg-cell filled">78.6</div><div class="tg-cell filled">77.9</div><div class="tg-cell filled">78.4</div><div class="tg-cell filled">77.5</div><div class="tg-cell filled">78.1</div><div class="tg-cell filled">77.3</div>
+        <div class="tg-cell"></div><div class="tg-cell"></div><div class="tg-cell"></div><div class="tg-cell"></div><div class="tg-cell"></div><div class="tg-cell"></div><div class="tg-cell"></div>
+        <div class="tg-cell"></div><div class="tg-cell"></div><div class="tg-cell"></div><div class="tg-cell"></div><div class="tg-cell"></div><div class="tg-cell"></div><div class="tg-cell"></div>
+      </div>
+      <div class="callout lime"><strong>Week 1 average above = 78.0 kg.</strong> Week 2 average 77.5 kg = 0.5 kg lost. Still 78.0? Run Resource 6 plateau protocol immediately.</div>
+      <table class="rtable">
+        <tr><th>Measurement</th><th>Month 1</th><th>Month 2</th><th>Month 3</th></tr>
+        <tr><td>Body weight (kg)</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+        <tr><td>Waist at navel (cm)</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+        <tr><td>Hips (cm)</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+        <tr><td>Chest (cm)</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+        <tr><td>Left thigh (cm)</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+        <tr><td>Left arm flexed (cm)</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+      </table>
+    </div>
+
+    <!-- R8 -->
+    <div class="res-card" id="r8">
+      <div class="res-header"><div class="res-icon-wrap">🍕</div><div><div class="res-num-label">Resource 08 of 12</div><div class="res-title">Eating Out Survival Guide</div></div></div>
+      <table class="rtable">
+        <tr><th>Situation</th><th>Strategy</th></tr>
+        <tr><td>Restaurant</td><td>Protein + vegetable base. Sauce on the side. Skip bread basket — 300+ invisible calories.</td></tr>
+        <tr><td>Fast food</td><td>Grilled over fried. Water or zero-sugar drink. Single item, no upsizing. Saves 400–600 kcal.</td></tr>
+        <tr><td>Wedding / buffet</td><td>Eat protein snack 1 hr before — you'll eat 30–40% less. Plate protein first.</td></tr>
+        <tr><td>Office snacks</td><td>Pre-pack your own. Never make food decisions while hungry.</td></tr>
+        <tr><td>Alcohol</td><td>7 kcal/g, blunts fat metabolism 12–24 hrs. Spirits + zero mixer. Eat protein before, not pizza after.</td></tr>
+      </table>
+      <div class="callout purple"><strong>The one-day rule:</strong> A bad meal changes nothing over a month. A bad week does. Success goes to the fastest restarters, not the most disciplined people.</div>
+    </div>
+
+    <!-- R9 -->
+    <div class="res-card" id="r9">
+      <div class="res-header"><div class="res-icon-wrap">😴</div><div><div class="res-num-label">Resource 09 of 12</div><div class="res-title">Sleep &amp; Recovery Nutrition</div></div></div>
+      <p class="rp">Sleep deprivation raises ghrelin (hunger) by 28% and lowers leptin (fullness) by 18%. You wake measurably hungrier and your body resists fat loss harder after poor sleep.</p>
+      <table class="rtable">
+        <tr><th>Sleep</th><th>Fat loss effect</th><th>Muscle effect</th></tr>
+        <tr><td>Under 6 hrs</td><td class="td-o">Fat loss reduced ~55%</td><td class="td-o">60% of weight lost is muscle</td></tr>
+        <tr><td>7–9 hrs</td><td class="td-g">Optimal environment</td><td class="td-g">Normal protein synthesis</td></tr>
+      </table>
+      <div class="callout blue"><strong>Before bed:</strong> 20–40g casein protein (cottage cheese is best). Proven to increase overnight muscle protein synthesis by ~22%. Avoid high sugar, alcohol, and large fatty meals before sleep.</div>
+    </div>
+
+    <!-- R10 -->
+    <div class="res-card" id="r10">
+      <div class="res-header"><div class="res-icon-wrap">🧃</div><div><div class="res-num-label">Resource 10 of 12</div><div class="res-title">Supplement Truth Sheet</div></div></div>
+      <table class="rtable">
+        <tr><th>Supplement</th><th>Evidence</th><th>Worth it?</th><th>Dose</th></tr>
+        <tr><td>Whey Protein</td><td class="td-g">Very strong</td><td class="td-g">Yes — if struggling to hit protein</td><td>25–40g any time</td></tr>
+        <tr><td>Creatine Monohydrate</td><td class="td-g">Very strong</td><td class="td-g">Yes — most studied ever</td><td>3–5g daily, no loading</td></tr>
+        <tr><td>Caffeine</td><td class="td-g">Strong</td><td class="td-l">Already in coffee</td><td>3–6mg per kg pre-workout</td></tr>
+        <tr><td>Vitamin D3</td><td class="td-g">Strong if deficient</td><td class="td-l">Get blood test first</td><td>1,000–2,000 IU with fat</td></tr>
+        <tr><td>Omega-3</td><td class="td-g">Moderate</td><td class="td-l">Yes if little fish eaten</td><td>2–3g EPA+DHA daily</td></tr>
+        <tr><td>BCAAs</td><td class="td-o">Weak</td><td class="td-o">No — redundant</td><td>—</td></tr>
+        <tr><td>Fat burners</td><td class="td-o">None</td><td class="td-o">Never</td><td>—</td></tr>
+      </table>
+      <div class="callout lime"><strong>Real hierarchy:</strong> Food > sleep > consistency > creatine > everything else. Nothing outperforms your calorie target.</div>
+    </div>
+
+    <!-- R11 -->
+    <div class="res-card" id="r11">
+      <div class="res-header"><div class="res-icon-wrap">🧠</div><div><div class="res-num-label">Resource 11 of 12</div><div class="res-title">Mindset &amp; Habit Framework</div></div></div>
+      <table class="rtable">
+        <tr><th>#</th><th>Principle</th><th>In practice</th></tr>
+        <tr><td>1</td><td>Identity before behaviour</td><td>"I'm someone who tracks food" — not "I'm trying to." Behaviour follows identity.</td></tr>
+        <tr><td>2</td><td>Never miss twice</td><td>One missed day is an accident. Two is a new bad habit. Restart the next morning, always.</td></tr>
+        <tr><td>3</td><td>Lower activation energy</td><td>Prep meals Sunday. Healthy food at eye level. Gym bag by the door. Easy = done.</td></tr>
+        <tr><td>4</td><td>80% consistency wins</td><td>80% over 12 weeks beats chasing 100% and failing. Perfection creates binge cycles.</td></tr>
+        <tr><td>5</td><td>Reframe setbacks fast</td><td>"I'm learning" not "I failed." Fast restarters beat disciplined quitters every time.</td></tr>
+      </table>
+      <div class="callout purple"><strong>Why people really quit:</strong> They expect linear progress. Fat loss is not linear. Trust the 4-week trend, never the daily number.</div>
+    </div>
+
+    <!-- R12 -->
+    <div class="res-card" id="r12" style="border-color:rgba(212,245,60,0.25);background:linear-gradient(160deg,#13131f 60%,rgba(212,245,60,0.03) 100%);">
+      <div class="res-header"><div class="res-icon-wrap" style="background:var(--lime-dim);border-color:var(--lime-b);">🎯</div><div><div class="res-num-label" style="color:var(--lime);">Resource 12 of 12</div><div class="res-title">Your Personalized Goal Roadmap</div></div></div>
+      <p class="rp">Your roadmap is calculated from the numbers shown at the top of this page.</p>
+      <div class="callout lime"><strong>Formula:</strong> Starting weight − (loss rate × weeks) = projected weight. Moderate cut = ~0.5 kg/week. Aggressive = ~0.75 kg/week. Lean bulk = +0.3 kg/week.</div>
+      <div id="roadmap-content">
+        <table class="rtable">
+          <tr><th>Milestone</th><th>Projected weight</th><th>Key focus</th></tr>
+          <tr><td>Week 0</td><td class="td-l" id="rm-w0">— kg</td><td>Establish calorie tracking — nothing else matters yet</td></tr>
+          <tr><td>Week 4</td><td class="td-l" id="rm-w4">— kg</td><td>Losing 0.4–0.6 kg/week? If not, run Resource 6</td></tr>
+          <tr><td>Week 8</td><td class="td-l" id="rm-w8">— kg</td><td>Diet break week — eat at maintenance, non-negotiable</td></tr>
+          <tr><td>Week 10</td><td class="td-l" id="rm-w10">— kg</td><td>Small scale rise is normal — glycogen, not fat</td></tr>
+          <tr><td>Week 12</td><td class="td-l" id="rm-w12">— kg</td><td>Recalculate TDEE in the calculator with your new weight</td></tr>
+        </table>
+      </div>
+      <p class="rp" style="margin-top:14px;"><strong style="color:var(--text)">Most important next step:</strong> Return to <a href="index.html" style="color:var(--lime);">BodyFuel Calculator</a> and recalculate in 4 weeks. Your TDEE changes as your weight changes — updating it every 4 weeks is the single habit that separates successful transformations from permanent plateaus.</p>
+    </div>
+
+  </div><!-- /locked-resources -->
+
+  <footer>
+    <p>© 2026 BodyFuel Calculator &nbsp;·&nbsp; <a href="index.html">Home</a> &nbsp;·&nbsp; <a href="about.html">About</a> &nbsp;·&nbsp; <a href="privacy.html">Privacy Policy</a></p>
+    <p>Results are estimates. Consult a qualified health professional before significant dietary changes.</p>
+  </footer>
+
+</div><!-- /wrap -->
+
+<script>
+function toggleMenu(){document.getElementById('nav-hbg').classList.toggle('open');document.getElementById('nav-mob').classList.toggle('open');}
+// ── Read personalized numbers ──
+// Two arrival modes:
+//   1. Via emailed link → URL has calc params + from=email → skip gate
+//   2. Via CPA completion → CPAGrip redirects to thankyou.html (no params) → read localStorage (written by relay.html)
+function getParam(urlParams, key, ssKey){
+  return urlParams.get(key) || localStorage.getItem(ssKey);
+}
+var urlParams = new URLSearchParams(window.location.search);
+var cal      = getParam(urlParams, 'cal',       'bf_cal');
+var bmi      = getParam(urlParams, 'bmi',       'bf_bmi');
+var bmiLabel = getParam(urlParams, 'bmi_label', 'bf_bmi_label');
+var bmr      = getParam(urlParams, 'bmr',       'bf_bmr');
+var tdee     = getParam(urlParams, 'tdee',      'bf_tdee');
+var prot     = getParam(urlParams, 'prot',      'bf_prot');
+var carb     = getParam(urlParams, 'carb',      'bf_carb');
+var fat      = getParam(urlParams, 'fat',       'bf_fat');
+var water    = getParam(urlParams, 'water',     'bf_water');
+var goal     = getParam(urlParams, 'goal',      'bf_goal');
+var weight   = parseFloat(getParam(urlParams, 'weight', 'bf_weight'));
+var unit     = getParam(urlParams, 'unit',      'bf_unit');
+var iw       = getParam(urlParams, 'iw',        'bf_iw');
+
+var ncContent=document.getElementById('nc-content');
+if(cal&&bmi&&tdee){
+  ncContent.innerHTML=
+    '<div class="nc-grid">'+
+    '<div class="nc-box"><div class="nc-val">'+parseInt(cal).toLocaleString()+'</div><div class="nc-sub">Daily Calories</div></div>'+
+    '<div class="nc-box"><div class="nc-val">'+bmi+'</div><div class="nc-sub">BMI ('+bmiLabel+')</div></div>'+
+    '<div class="nc-box"><div class="nc-val">'+parseInt(tdee).toLocaleString()+'</div><div class="nc-sub">Your TDEE</div></div>'+
+    '<div class="nc-box"><div class="nc-val">'+parseInt(bmr).toLocaleString()+'</div><div class="nc-sub">Your BMR</div></div>'+
+    '<div class="nc-box"><div class="nc-val">'+prot+'g</div><div class="nc-sub">Protein/day</div></div>'+
+    '<div class="nc-box"><div class="nc-val">'+water+'L</div><div class="nc-sub">Water/day</div></div>'+
+    '</div>';
+} else {
+  ncContent.innerHTML='<div class="nc-no-data">No session data found. <a href="index.html">Go back and calculate your numbers</a> — then this card shows your personal stats.</div>';
+}
+
+// ── Populate personalized roadmap ──
+function buildRoadmap(){
+  if(!weight||!goal) return;
+  // rate is kg/month. weight is stored in display unit (kg or lbs).
+  // Convert weight to kg first for calculation, then display back in user's unit.
+  var weightKg = unit==='imperial' ? weight/2.20462 : weight;
+  var rateMap={'aggressive-loss':-0.75,'lose':-0.5,'maintain':0,'gain':0.3,'aggressive-gain':0.5};
+  var rate=rateMap[goal]||0;
+  var u=unit==='imperial'?'lbs':'kg';
+  function wAt(months){
+    var kg2=weightKg+(rate*months);
+    return unit==='imperial'?(kg2*2.20462).toFixed(1):kg2.toFixed(1);
+  }
+  document.getElementById('rm-w0').textContent=(unit==='imperial'?(weightKg*2.20462).toFixed(1):weightKg.toFixed(1))+' '+u;
+  document.getElementById('rm-w4').textContent=wAt(1)+' '+u;   // week 4  ≈ 1 month
+  document.getElementById('rm-w8').textContent=wAt(2)+' '+u;   // week 8  ≈ 2 months
+  document.getElementById('rm-w10').textContent=wAt(2.4)+' '+u+' (after diet break)'; // week 10 ≈ 2.4 months
+  document.getElementById('rm-w12').textContent=wAt(2.9)+' – '+wAt(3)+' '+u; // week 12 ≈ 3 months
+}
+buildRoadmap();
+
+</script>
+
+</body>
+</html>
